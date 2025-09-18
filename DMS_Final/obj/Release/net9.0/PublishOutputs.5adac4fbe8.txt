@@ -1,0 +1,14 @@
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\DMS_Final.exe
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\appsettings.Development.json
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\appsettings.json
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\DMS_Final.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\DMS_Final.deps.json
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\DMS_Final.runtimeconfig.json
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\DMS_Final.pdb
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\Newtonsoft.Json.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\System.Data.SqlClient.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\runtimes\win-arm64\native\sni.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\runtimes\win-x64\native\sni.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\runtimes\win-x86\native\sni.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+E:\back 1792025\Backend\DMS_Final\obj\Release\net9.0\PubTmp\Out\runtimes\win\lib\net8.0\System.Data.SqlClient.dll

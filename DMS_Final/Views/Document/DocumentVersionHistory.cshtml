@@ -1,0 +1,101 @@
+﻿@model List<DMS_Final.Models.DocumentDetailsModel>
+@using DMS_Final.Models
+@{
+    // Create dictionary to group documents by DocumentId and VersionNumber
+    Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>> grouped =
+        new Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>>();
+
+    // Group documents manually
+    foreach (var doc in Model)
+    {
+        // Check if DocumentId exists in outer dictionary
+        if (!grouped.ContainsKey(doc.DocumentId))
+        {
+            grouped[doc.DocumentId] = new Dictionary<int, List<DocumentDetailsModel>>();
+        }
+
+        // Check if VersionNumber exists in inner dictionary
+        if (!grouped[doc.DocumentId].ContainsKey(doc.VersionNumber))
+        {
+            grouped[doc.DocumentId][doc.VersionNumber] = new List<DocumentDetailsModel>();
+        }
+
+        // Add document to appropriate group
+        grouped[doc.DocumentId][doc.VersionNumber].Add(doc);
+    }
+}
+
+<h2>Document Version History</h2>
+
+<div class="d-flex flex-column align-items-center justify-content-center py-4 bg-light rounded shadow-sm">
+    <h2 class="fw-bold text-primary mb-2">
+        <i class="bi bi-file-earmark-text me-2"></i>
+        @ViewBag.title
+    </h2>
+    @* <p class="text-muted fs-5 mb-0" style="max-width: 600px; text-align: center;">
+        @ViewBag.DocumentDescription
+    </p> *@
+</div> 
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No version history found.</div>
+}
+else
+{
+    foreach (var docGroup in grouped)
+    {
+        @* <h4>Document ID: @docGroup.Key</h4>  *@
+
+        // Get all version numbers and sort them manually
+        List<int> versionNumbers = new List<int>(docGroup.Value.Keys);
+        versionNumbers.Sort();
+
+        foreach (var versionNumber in versionNumbers)
+        {
+            var versionFiles = docGroup.Value[versionNumber];
+            var firstFile = versionFiles[0];
+
+            // Create unique ID for collapsible section
+            string collapseId = $"collapse_{docGroup.Key}_{versionNumber}";
+
+            <div class="border p-2 mb-3">
+                <!-- Version header row -->
+                <div class="d-flex justify-content-between align-items-center gap-3" style="cursor: pointer;"
+                     data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                    <div>
+                        <b class="me-3">Version: @versionNumber</b>
+                        <span class="me-3">|</span>
+                        <span class="me-3">Uploaded: @firstFile.CreatedOn.ToString("yyyy-MM-dd HH:mm")</span>
+                        <span class="me-3">|</span>
+                        <span class="me-3">Description: @firstFile.Description</span>
+                        @* <span class="me-3">Tags: @string.Join(", ", firstFile.Tags)</span> *@
+                        @* <span class="me-3">Status: @firstFile.ApproveStatus</span> *@
+                    </div>
+                    <span class="badge bg-primary">@versionFiles.Count file(s)</span>
+                </div>
+            </div>
+
+                <!-- Collapsible file list -->
+                <div class="collapse mt-2" id="@collapseId">
+                    <ul class="list-group">
+                        @foreach (var file in versionFiles)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@file.OriginalFileName</span>
+                                <div>
+                                    <a asp-action="ViewDocument" asp-route-documentDetailId="@file.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a asp-action="DownloadDocument" asp-route-documentDetailId="@file.Id" class="btn btn-success btn-sm" title="Download Document">
+                                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+        }
+    }
+}

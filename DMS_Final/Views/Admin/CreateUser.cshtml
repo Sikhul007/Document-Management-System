@@ -1,0 +1,120 @@
+﻿@model DMS_Final.Models.UserModel
+@{
+    ViewBag.Title = "Create New User";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h2 class="h4 mb-0">Create New User</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateUser" method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="Name" class="form-label">Name</label>
+                                <input asp-for="Name" class="form-control" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="UserName" class="form-label">Username</label>
+                                <input asp-for="UserName" class="form-control" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label asp-for="Roles" class="form-label">Role</label>
+                                <select asp-for="Roles" class="form-select">
+                                    <option>Admin</option>
+                                    <option>Developer</option>
+                                    <option>Manager</option>
+                                    <option>IT</option>
+                                    <option>Implementation</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="Password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="Password" name="Password" required />
+                                    <span class="input-group-text toggle-password" toggle="#Password" style="cursor:pointer;">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required />
+                                    <span class="input-group-text toggle-password" toggle="#ConfirmPassword" style="cursor:pointer;">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
+                                <span id="passwordMismatch" class="text-danger mt-2" style="display:none;">Passwords do not match.</span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <button type="submit" class="btn btn-success me-md-2">Save</button>
+                            @* <a asp-controller="User" asp-action="AdminDashboard" class="btn btn-secondary">Go to Admin Dashboard</a> *@
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        document.querySelectorAll('.toggle-password').forEach(function (el) {
+            el.addEventListener('click', function () {
+                var input = document.querySelector(this.getAttribute('toggle'));
+                if (input.type === "password") {
+                    input.type = "text";
+                    this.querySelector('i').classList.remove('fa-eye');
+                    this.querySelector('i').classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    this.querySelector('i').classList.remove('fa-eye-slash');
+                    this.querySelector('i').classList.add('fa-eye');
+                }
+            });
+        });
+
+        
+        var pwd = document.getElementById('Password');
+        var cpwd = document.getElementById('ConfirmPassword');
+        var msg = document.getElementById('passwordMismatch');
+        var form = document.querySelector('form');
+
+        function checkPasswords() {
+            if (pwd.value !== cpwd.value) {
+                msg.style.display = 'inline';
+                return false;
+            } else {
+                msg.style.display = 'none';
+                return true;
+            }
+        }
+
+        cpwd.addEventListener('input', checkPasswords);
+        pwd.addEventListener('input', checkPasswords);
+
+        form.addEventListener('submit', function (e) {
+            if (!checkPasswords()) {
+                e.preventDefault();
+                cpwd.focus();
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

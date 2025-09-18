@@ -1,0 +1,119 @@
+﻿@model List<DMS_Final.Models.DocumentDetailsModel>
+@using DMS_Final.Models
+@{
+    // Create dictionary to group documents by DocumentId and VersionNumber
+    Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>> grouped =
+        new Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>>();
+
+    // Group documents manually
+    foreach (var doc in Model)
+    {
+        if (!grouped.ContainsKey(doc.DocumentId))
+        {
+            grouped[doc.DocumentId] = new Dictionary<int, List<DocumentDetailsModel>>();
+        }
+
+        if (!grouped[doc.DocumentId].ContainsKey(doc.VersionNumber))
+        {
+            grouped[doc.DocumentId][doc.VersionNumber] = new List<DocumentDetailsModel>();
+        }
+
+        grouped[doc.DocumentId][doc.VersionNumber].Add(doc);
+    }
+}
+
+<div class="d-flex flex-column align-items-center justify-content-center py-4 bg-light rounded shadow-sm">
+    <h2 class="fw-bold text-primary mb-2">
+        <i class="bi bi-file-earmark-text me-2"></i>
+        @ViewBag.DocumentTitle
+    </h2>
+    <p class="text-muted fs-5 mb-0" style="max-width: 600px; text-align: center;">
+        @ViewBag.DocumentDescription
+    </p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No File is found.</div>
+}
+else
+{
+    foreach (var docGroup in grouped)
+    {
+
+        // Get all version numbers and sort them
+        List<int> versionNumbers = new List<int>(docGroup.Value.Keys);
+        versionNumbers.Sort();
+
+        foreach (var versionNumber in versionNumbers)
+        {
+            var versionFiles = docGroup.Value[versionNumber];
+            var firstFile = versionFiles[0];
+
+            // Create unique ID for collapsible section
+            string collapseId = $"collapse_{docGroup.Key}_{versionNumber}";
+
+            <div class="border p-2 mb-3">
+                <!-- Version header row -->
+                <div class="d-flex justify-content-between align-items-center gap-3" style="cursor: pointer;"
+                     data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                    <div>
+                        <b class="me-3">Version: @versionNumber</b>
+                        <span class="me-3">|</span>
+                        <span class="me-3">Uploaded: @firstFile.CreatedOn.ToString("yyyy-MM-dd HH:mm")</span>
+                        <span class="me-3">|</span>
+                        <span class="me-3">Description: @firstFile.Description</span>
+                    </div>
+                    <span class="badge bg-primary">@versionFiles.Count file(s)</span>
+                </div>
+
+                <!-- Collapsible file list -->
+                <div class="collapse mt-2" id="@collapseId">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>File Name</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in versionFiles)
+                            {
+                                <tr>
+                                    <td>@file.OriginalFileName</td>
+                                    <td>@file.Description</td>
+                                    <td>@file.ApproveStatus</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="ViewDocument" asp-route-documentDetailId="@file.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-action="DownloadDocument" asp-route-documentDetailId="@file.Id" class="btn btn-success btn-sm" title="Download Document">
+                                                <i class="bi bi-cloud-arrow-down-fill"></i>
+                                            </a>
+                                            <form asp-action="UploadNewVersion" asp-controller="Document" method="get" style="display:inline">
+                                                <input type="hidden" name="documentDetailId" value="@file.Id" />
+                                                <input type="hidden" name="documentId" value="@file.DocumentId" />
+                                                <button type="submit" class="btn btn-primary btn-sm" title="Upload New Version">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                            </form>
+                                            <form asp-action="DeleteDocumentDetail" asp-controller="Document" method="post" style="display:inline">
+                                                <input type="hidden" name="documentDetailId" value="@file.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Document" onclick="return confirm('Are you sure you want to delete this file?');">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+}

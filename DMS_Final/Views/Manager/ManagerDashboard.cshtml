@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Manager Dashboard";
+}
+
+<h2>Welcome IT</h2>
+<p>Hello, @Context.Session.GetString("UserName")</p>
+<p>Your Role: @Context.Session.GetString("UserRole")</p>
+
+<a asp-controller="User" asp-action="Logout">Logout</a>
+<a href="~/Document/UploadDocument" class="btn btn-primary" style="margin-bottom:15px;">
+    Upload Document
+</a>
+<a asp-controller="Document" asp-action="PendingDocuments" class="btn btn-primary">
+    View All Pending Documents
+</a>
+<a href="~/User/ChangePassword" class="btn btn-primary" style="margin-bottom:15px;">
+    Change Password
+</a>

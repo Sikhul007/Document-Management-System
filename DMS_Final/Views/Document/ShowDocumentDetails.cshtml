@@ -1,0 +1,104 @@
+﻿@model IEnumerable<DMS_Final.Models.DocumentDetailsModel>
+@{
+    var doc = ViewBag.Document as DMS_Final.Models.DocumentModel;
+    var allTags = ViewBag.AllTags as List<DMS_Final.Models.TagModel>;
+}
+
+<h2>Document Details: @doc?.Title</h2>
+<p><strong>Description:</strong> @doc?.Description</p>
+<p><strong>Created By:</strong> @doc?.CreatedBy</p>
+<p><strong>Created On:</strong> @doc?.CreatedOn.ToString("yyyy-MM-dd")</p>
+
+<form method="get" asp-action="ShowDocumentDetails" asp-controller="Document">
+    <input type="hidden" name="id" value="@doc?.Id" />
+    <div class="row mb-2">
+        <div class="col">
+            <select name="tag" class="form-control">
+                <option value="">-- Select Tag --</option>
+                @if (allTags != null)
+                {
+                    foreach (var tag in allTags)
+                    {
+                        if (ViewContext.HttpContext.Request.Query["tag"] == tag.Name)
+                        {
+                            <option value="@tag.Name" selected>@tag.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@tag.Name">@tag.Name</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="col">
+            <select name="status" class="form-control">
+                <option value="">-- Select Status --</option>
+                @if (ViewContext.HttpContext.Request.Query["status"] == "pending")
+                {
+                    <option value="pending" selected>Pending</option>
+                }
+                else
+                {
+                    <option value="pending">Pending</option>
+                }
+
+                @if (ViewContext.HttpContext.Request.Query["status"] == "approved")
+                {
+                    <option value="approved" selected>Approved</option>
+                }
+                else
+                {
+                    <option value="approved">Approved</option>
+                }
+            </select>
+        </div>
+        <div class="col">
+            <input type="text" name="version" class="form-control" placeholder="Search by Version" value="@(ViewContext.HttpContext.Request.Query["version"])" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-action="ShowDocumentDetails" asp-route-id="@doc?.Id" class="btn btn-secondary ms-2">Clear All</a>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Original File Name</th>
+            <th>Version Number</th>
+            <th>Description</th>
+            <th>Created By</th>
+            <th>Tags</th>
+            <th>Approve Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model)
+        {
+            <tr>
+                <td>@detail.OriginalFileName</td>
+                <td>@detail.VersionNumber</td>
+                <td>@detail.Description</td>
+                <td>@detail.CreatedBy</td>
+                <td>
+                    @foreach (var tag in detail.Tags)
+                    {
+                        <span class="badge bg-info">@tag</span>
+                    }
+                </td>
+                <td>@detail.ApproveStatus</td>
+                <td>
+                    <a asp-action="ViewDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a asp-action="DownloadDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-success btn-sm" title="Download Document">
+                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
