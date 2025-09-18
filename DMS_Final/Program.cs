@@ -1,11 +1,14 @@
 using DMS_Final.Repositories;
 using DMS_Final.Repository;
+
 using DMS_Final.Repository.Admin;
 using DMS_Final.Repository.Document;
+using DMS_Final.Repository.Pagination;
 //using DMS_Final.Repository.Notification;
 using DMS_Final.Repository.User;
 using DMS_Final.Services;
 using DMS_Final.Services.Admin;
+using DMS_Final.Services.Pagination;
 using DMS_Final.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +35,12 @@ builder.Services.AddScoped<IDocumentStatusHistoryService, DocumentStatusHistoryS
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
+// Register Pagination Repository and Service
+// Register the generic pagination repository
+builder.Services.AddScoped<IGenericPaginationRepository, GenericPaginationRepository>();
+
+// Register individual pagination service for DocumentStatusHistory
+builder.Services.AddScoped<IDocumentStatusHistoryPaginationService, DocumentStatusHistoryPaginationService>();
 
 builder.Services.AddSession(options =>
 {

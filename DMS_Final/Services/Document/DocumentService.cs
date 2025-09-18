@@ -419,6 +419,109 @@ public class DocumentService : IDocumentService
         }
     }
 
+    //public void UploadNewVersionMultiple(
+    //    int parentDetailId,
+    //    int documentId,
+    //    DocumentModel model,
+    //    List<IFormFile> files,
+    //    List<string> fileDescriptions,
+    //    string createdBy,
+    //    string createdFrom,
+    //    string userRole,
+    //    List<List<int>> TagIds)
+    //{
+    //    bool isAdminOrManager = userRole == "Admin" || userRole == "Manager";
+    //    bool isArchive = !isAdminOrManager;
+    //    string status = isAdminOrManager ? "approved" : "pending";
+
+    //    using (SqlConnection conn = new SqlConnection(_connectionString))
+    //    {
+    //        conn.Open();
+    //        using (SqlTransaction transaction = conn.BeginTransaction())
+    //        {
+    //            try
+    //            {
+    //                // Mark previous detail as superseded
+    //                _documentRepository.SetApproveStatus(parentDetailId, "superseded", conn, transaction);
+
+    //                // Get previous version number
+    //                int previousVersion = 1;
+    //                string getVersionSql = "SELECT VersionNumber FROM DocumentDetails WHERE Id = @Id";
+    //                using (var cmd = new SqlCommand(getVersionSql, conn, transaction))
+    //                {
+    //                    cmd.Parameters.AddWithValue("@Id", parentDetailId);
+    //                    var result = cmd.ExecuteScalar();
+    //                    if (result != null)
+    //                        previousVersion = Convert.ToInt32(result);
+    //                }
+
+    //                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+    //                if (!Directory.Exists(uploadsFolder))
+    //                    Directory.CreateDirectory(uploadsFolder);
+
+    //                for (int i = 0; i < files.Count; i++)
+    //                {
+    //                    var file = files[i];
+    //                    var fileDescription = fileDescriptions[i];
+    //                    var fileTagIds = TagIds[i];
+
+    //                    string originalFileName = Path.GetFileName(file.FileName);
+    //                    string fileName = Path.GetFileNameWithoutExtension(originalFileName) + "_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + Path.GetExtension(originalFileName);
+    //                    string filePath = Path.Combine(uploadsFolder, fileName);
+
+    //                    using (var stream = new FileStream(filePath, FileMode.Create))
+    //                    {
+    //                        file.CopyTo(stream);
+    //                    }
+
+    //                    var details = new DocumentDetailsModel
+    //                    {
+    //                        DocumentId = documentId,
+    //                        OriginalFileName = originalFileName,
+    //                        FileName = fileName,
+    //                        Description = fileDescription,
+    //                        VersionNumber = previousVersion + 1,
+    //                        CreatedBy = createdBy,
+    //                        CreatedOn = DateTime.Now,
+    //                        ApproveStatus = status,
+    //                        IsArchive = isArchive,
+    //                        ParentDocumentId = parentDetailId,
+    //                        LastUpdateBy = createdBy,
+    //                        LastUpdateOn = DateTime.Now
+    //                    };
+    //                    int documentDetailId = _documentRepository.InsertDocumentDetails(details, conn, transaction);
+
+    //                    // Insert tags for this new version
+    //                    foreach (var tagId in fileTagIds)
+    //                    {
+    //                        _documentRepository.InsertDocumentTag(documentDetailId, tagId, conn, transaction);
+    //                    }
+
+    //                    var history = new DocumentStatusHistoryModel
+    //                    {
+    //                        DocumentId = documentId,
+    //                        DocumentDetailId = documentDetailId,
+    //                        ApproveStatus = status,
+    //                        CreatedBy = createdBy,
+    //                        CreatedOn = DateTime.Now,
+    //                        CreatedFrom = createdFrom,
+    //                        Notes = isAdminOrManager ? "New version auto-approved" : "New version pending approval"
+    //                    };
+    //                    _documentRepository.InsertStatusHistory(history, conn, transaction);
+    //                }
+
+    //                transaction.Commit();
+    //            }
+    //            catch
+    //            {
+    //                transaction.Rollback();
+    //                throw;
+    //            }
+    //        }
+    //    }
+    //}
+
+
     public void UploadNewVersionMultiple(
         int parentDetailId,
         int documentId,
@@ -433,6 +536,9 @@ public class DocumentService : IDocumentService
         bool isAdminOrManager = userRole == "Admin" || userRole == "Manager";
         bool isArchive = !isAdminOrManager;
         string status = isAdminOrManager ? "approved" : "pending";
+
+        // Store uploaded file info for notifications
+        var uploadedNewVersions = new List<(int documentDetailId, string originalFileName, int versionNumber)>();
 
         using (SqlConnection conn = new SqlConnection(_connectionString))
         {
@@ -459,6 +565,8 @@ public class DocumentService : IDocumentService
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
 
+                    int newVersionNumber = previousVersion + 1;
+
                     for (int i = 0; i < files.Count; i++)
                     {
                         var file = files[i];
@@ -480,7 +588,7 @@ public class DocumentService : IDocumentService
                             OriginalFileName = originalFileName,
                             FileName = fileName,
                             Description = fileDescription,
-                            VersionNumber = previousVersion + 1,
+                            VersionNumber = newVersionNumber,
                             CreatedBy = createdBy,
                             CreatedOn = DateTime.Now,
                             ApproveStatus = status,
@@ -490,6 +598,9 @@ public class DocumentService : IDocumentService
                             LastUpdateOn = DateTime.Now
                         };
                         int documentDetailId = _documentRepository.InsertDocumentDetails(details, conn, transaction);
+
+                        // Store for notifications
+                        uploadedNewVersions.Add((documentDetailId, originalFileName, newVersionNumber));
 
                         // Insert tags for this new version
                         foreach (var tagId in fileTagIds)
@@ -518,6 +629,72 @@ public class DocumentService : IDocumentService
                     throw;
                 }
             }
+        }
+
+        // Create notifications AFTER the main transaction is committed
+        try
+        {
+            if (status == "pending" || status == "approved")
+            {
+                var adminUserIds = _userRepository.GetUsersByRole("Admin").Select(u => u.Id).ToList();
+                var uploaderUserId = _userRepository.GetUserIdByUsername(createdBy);
+
+                if (uploaderUserId > 0)
+                {
+                    // Get document details from database
+                    var document = _documentRepository.GetDocumentById(documentId);
+                    string documentTitle = document?.Title ?? "Unknown Document";
+                    string documentDescription = document?.Description ?? "";
+
+                    // Filter out the uploader from admin notification list
+                    // Only notify other admins, not the one who uploaded
+                    var adminsToNotify = adminUserIds.Where(adminId => adminId != uploaderUserId).ToList();
+
+                    foreach (var versionInfo in uploadedNewVersions)
+                    {
+                        // Different message based on status
+                        string notificationMessage;
+                        string eventType;
+
+                        if (status == "pending")
+                        {
+                            notificationMessage = $"A new version (v{versionInfo.versionNumber}) of file '{versionInfo.originalFileName}' from document '{documentTitle}' has been uploaded by {createdBy} and is pending your review.";
+                            eventType = "document_version_pending";
+                        }
+                        else // approved
+                        {
+                            notificationMessage = $"A new version (v{versionInfo.versionNumber}) of file '{versionInfo.originalFileName}' from document '{documentTitle}' has been uploaded and approved by {createdBy}.";
+                            eventType = "document_version_approved";
+                        }
+
+                        // Only notify other admins, not the uploading admin
+                        foreach (var adminId in adminsToNotify)
+                        {
+                            try
+                            {
+                                _notificationService.CreateNotification(
+                                    targetUserId: adminId,
+                                    actorUserId: uploaderUserId,
+                                    eventType: eventType,
+                                    message: notificationMessage,
+                                    documentId: documentId,
+                                    documentDetailId: versionInfo.documentDetailId
+                                );
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log the error but don't fail the entire upload
+                                Console.WriteLine($"Failed to create new version notification: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the error but don't fail the entire upload
+            Console.WriteLine($"Failed to create new version notifications: {ex.Message}");
         }
     }
 

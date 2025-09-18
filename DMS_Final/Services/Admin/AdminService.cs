@@ -26,7 +26,6 @@ namespace DMS_Final.Services.Admin
         {
             _adminRepository.DeleteUser(id);
         }
-        // Hello
 
         public List<UserModel> GetAllUsers()
         {

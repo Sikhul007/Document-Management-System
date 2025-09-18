@@ -266,7 +266,7 @@ namespace DMS_Final.Controllers
         }
 
 
-        [RoleAuthorize("Admin")]
+        [RoleAuthorize("Admin", "Developer")]
         [HttpPost]
         public IActionResult DeleteDocumentDetail(int documentDetailId)
         {

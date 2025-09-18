@@ -86,12 +86,18 @@ wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250916113644094
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250916173802958.pdf
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250917164500257.pdf
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250917173836134.pdf
+wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250918142811771.pdf
 wwwroot\uploads\Assignment_20250908153707315.pdf
 wwwroot\uploads\Assignment_20250914101525857.pdf
 wwwroot\uploads\Computer Networks-22062024_20250909105857453.pdf
 wwwroot\uploads\Computer Networks-22062024_20250916114744074.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250917171556622.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250917173836125.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250918141032935.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250918142226404.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250918142659492.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250918142945277.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250918152502010.pdf
 wwwroot\uploads\Impact_20250908113335237.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250903164835521.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250903165101116.pdf
@@ -106,6 +112,7 @@ wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_202509101024315
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250913165312424.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250914093811954.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250916173802971.pdf
+wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250918153748283.pdf
 wwwroot\uploads\LAB-0 [XML]_20250908123739330.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250903144042773.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250903152026247.pdf
@@ -137,6 +144,7 @@ wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250916114714094.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250917113604170.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250917125127597.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250917160539774.pdf
+wwwroot\uploads\Md. Sikhul Islam Shihab_CV_.net_20250918142226420.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250903165101075.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250904094519648.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250907093636072.pdf
@@ -147,6 +155,7 @@ wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250908160830172.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250909123204853.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250909163038805.pdf
 wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250916104424183.pdf
+wwwroot\uploads\Md. Sikhul Islam Shihab_CV_20250918152912456.pdf
 wwwroot\uploads\Me_20250913155058764.jpg
 wwwroot\uploads\ML assignment(22-46483-1)_20250907093323985.pdf
 wwwroot\uploads\ML assignment(22-46483-1)_20250916114714114.pdf
@@ -178,6 +187,7 @@ wwwroot\uploads\ViewDocument_20250914093934997.docx
 wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8 (1)_20250908161837547.jpg
 wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8 (1)_20250910184443232.jpg
 wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8 (1)_20250916114714108.jpg
+wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8 (1)_20250918142811782.jpg
 wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8_20250907130738657.jpg
 wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8_20250907130823112.jpg
 wwwroot\uploads\WhatsApp Image 2025-09-04 at 14.44.19_64824bd8_20250907151817267.jpg
