@@ -19,4 +19,8 @@
     <None Include="wwwroot\images\shampan-logo.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Pagination\MyDocument\" />
+  </ItemGroup>
+
 </Project>

@@ -31,11 +31,11 @@
                 {
                     <tr>
                         <td class="text-center">@doc.Description</td>
-                        <td class="text-center">@doc.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td class="text-center">
+                        <td class="text-center text-nowrap">@doc.CreatedOn.ToString("dd MMM. yy")</td>
+                        <td class="text-center text-nowrap">
                             @doc.Notes
                         </td>
-                        <td>
+                        <td class="text-center text-nowrap">
                             <a asp-action="ViewDocument" asp-route-documentDetailId="@doc.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
                             <i class="bi bi-eye-fill"></i>
                         </a>

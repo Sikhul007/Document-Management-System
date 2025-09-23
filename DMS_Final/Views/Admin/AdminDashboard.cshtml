@@ -228,11 +228,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Recent Documents</h6>
         <div class="d-flex">
             <div class="input-group me-2" style="width: 250px;">
-                @* <input type="text" class="form-control bg-light border-0 small" placeholder="Search documents..." aria-label="Search" aria-describedby="basic-addon2"> *@
                 <div class="input-group-append">
-                    @* <button class="btn btn-primary" type="button">
-                        <i class="bi bi-search"></i>
-                    </button> *@
                 </div>
             </div>
             <a asp-action="UploadDocument" asp-controller="Document" class="btn btn-sm btn-primary">
@@ -249,7 +245,6 @@
                         <th>Uploaded By</th>
                         <th>Date</th>
                         <th>Status</th>
-                        @* <th>Actions</th> *@
                     </tr>
                 </thead>
                 <tbody>
@@ -260,7 +255,7 @@
                             <tr>
                                 <td>@doc.OriginalFileName</td>
                                 <td>@doc.CreatedBy</td>
-                                <td>@doc.CreatedOn.ToString("yyyy-MM-dd")</td>
+                                <td>@doc.CreatedOn.ToString("dd MMM. yy")</td>
                                 <td>
                                     @if (doc.ApproveStatus == "approved")
                                     {
@@ -279,14 +274,6 @@
                                         <span class="badge bg-secondary">@doc.ApproveStatus</span>
                                     }
                                 </td>
-                                @* <td>
-                                    <a asp-action="ShowDocumentDetails" asp-controller="Document" asp-route-id="@doc.Id" class="btn btn-sm btn-info" title="View">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a asp-action="EditDocumentFull" asp-controller="Document" asp-route-documentId="@doc.DocumentId" class="btn btn-sm btn-warning" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                </td> *@
                             </tr>
                         }
                     }
@@ -299,7 +286,6 @@
                 </tbody>
             </table>
         </div>
-        <!-- Pagination and entry info can be added here if needed -->
     </div>
 </div>
 

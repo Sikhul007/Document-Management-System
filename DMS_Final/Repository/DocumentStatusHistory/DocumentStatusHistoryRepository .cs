@@ -24,8 +24,8 @@ namespace DMS_Final.Repositories
         FROM DocumentStatusHistories dsh
         LEFT JOIN Documents d ON dsh.DocumentId = d.Id
         LEFT JOIN DocumentDetails dd ON dsh.DocumentDetailId = dd.Id
-ORDER BY CreatedOn DESC
-    ";
+        ORDER BY CreatedOn DESC
+            ";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = new SqlCommand(sqlQuery, connection))
@@ -94,50 +94,5 @@ ORDER BY CreatedOn DESC
             }
             return historyList;
         }
-
-        // Recent Activities for notification, including Document Title and OriginalFileName
-        //public IEnumerable<(DocumentStatusHistoryModel History, string DocumentTitle, string OriginalFileName)> GetRecentNotifications(int count = 10)
-        //{
-        //    var notificationList = new List<(DocumentStatusHistoryModel, string, string)>();
-        //    string sqlQuery = @"
-        //        SELECT TOP (@Count) h.Id, h.DocumentId, h.DocumentDetailId, h.ApproveStatus, h.CreatedBy, h.CreatedOn, h.CreatedFrom, h.Notes,
-        //               d.Title AS DocumentTitle, dd.OriginalFileName
-        //        FROM DocumentStatusHistories h
-        //        INNER JOIN Documents d ON h.DocumentId = d.Id
-        //        INNER JOIN DocumentDetails dd ON h.DocumentDetailId = dd.Id
-        //        ORDER BY h.CreatedOn DESC";
-
-        //    using (SqlConnection connection = new SqlConnection(_connectionString))
-        //    {
-        //        using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-        //        {
-        //            command.Parameters.AddWithValue("@Count", count);
-        //            connection.Open();
-        //            using (SqlDataReader reader = command.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    var history = new DocumentStatusHistoryModel
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-        //                        DocumentId = reader.GetInt32(reader.GetOrdinal("DocumentId")),
-        //                        DocumentDetailId = reader.GetInt32(reader.GetOrdinal("DocumentDetailId")),
-        //                        ApproveStatus = reader.GetString(reader.GetOrdinal("ApproveStatus")),
-        //                        CreatedBy = reader.GetString(reader.GetOrdinal("CreatedBy")),
-        //                        CreatedOn = reader.GetDateTime(reader.GetOrdinal("CreatedOn")),
-        //                        CreatedFrom = reader.GetString(reader.GetOrdinal("CreatedFrom")),
-        //                        Notes = reader.IsDBNull(reader.GetOrdinal("Notes")) ? string.Empty : reader.GetString(reader.GetOrdinal("Notes"))
-        //                    };
-
-        //                    string documentTitle = reader.GetString(reader.GetOrdinal("DocumentTitle"));
-        //                    string originalFileName = reader.GetString(reader.GetOrdinal("OriginalFileName"));
-
-        //                    notificationList.Add((history, documentTitle, originalFileName));
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return notificationList;
-        //}
     }
 }

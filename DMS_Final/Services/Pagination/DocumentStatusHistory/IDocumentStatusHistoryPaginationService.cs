@@ -2,7 +2,7 @@
 using DMS_Final.Repository.Pagination;
 using System.Data.SqlClient;
 
-namespace DMS_Final.Services.Pagination
+namespace DMS_Final.Services.Pagination.DocumentStatusHistory
 {
     public interface IDocumentStatusHistoryPaginationService
     {

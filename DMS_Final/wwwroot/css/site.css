@@ -29,3 +29,26 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.option-placeholder {
+    color: #b0b0b0 !important;
+}
+
+select.form-control option.placeholder {
+    color: #b0b0b0;
+}
+
+.custom-dropdown {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' fill='gray' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem 1rem;
+    padding-right: 2rem;
+}
+
+.wide-description {
+    min-width: 300px;
+    max-width: 500px;
+    white-space: normal;
+    word-break: break-word;
+}

@@ -69,22 +69,35 @@ else
 
                 <!-- Collapsible file list -->
                 <div class="collapse mt-2" id="@collapseId">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" style="table-layout:fixed; width:100%;">
                         <thead class="table-primary">
                             <tr>
-                                <th>File Name</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th class="text-center">Action</th>
+                                <th class="text-center" style="width:30%;">File Name</th>
+                                <th class="text-center" style="width:35%;">Description</th>
+                                <th class="text-center" style="width:10%;">Status</th>
+                                <th class="text-center" style="width:25%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var file in versionFiles)
                             {
                                 <tr>
-                                    <td>@file.OriginalFileName</td>
-                                    <td>@file.Description</td>
-                                    <td>@file.ApproveStatus</td>
+                                    <td class="text-center" style="word-break:break-word;">@file.OriginalFileName</td>
+                                    <td class="text-center" style="word-break:break-word;">@file.Description</td>
+                                    <td class="text-center">
+                                        @if (file.ApproveStatus == "approved")
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else if (file.ApproveStatus == "pending")
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@file.ApproveStatus</span>
+                                        }
+                                    </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
                                             <a asp-action="ViewDocument" asp-route-documentDetailId="@file.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">

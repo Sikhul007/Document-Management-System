@@ -13,27 +13,21 @@
     <input type="hidden" name="id" value="@doc?.Id" />
     <div class="row mb-2">
         <div class="col">
-            <select name="tag" class="form-control">
-                <option value="">-- Select Tag --</option>
+            <select name="tag" class="form-control custom-dropdown">
+                <option value="" class="option-placeholder">Search By Tags</option>
                 @if (allTags != null)
                 {
                     foreach (var tag in allTags)
                     {
-                        if (ViewContext.HttpContext.Request.Query["tag"] == tag.Name)
-                        {
-                            <option value="@tag.Name" selected>@tag.Name</option>
-                        }
-                        else
-                        {
-                            <option value="@tag.Name">@tag.Name</option>
-                        }
+                        var isSelected = ViewContext.HttpContext.Request.Query["tag"] == tag.Name;
+                        <option value="@tag.Name" selected="@(isSelected ? "selected" : null)">@tag.Name</option>
                     }
                 }
             </select>
         </div>
         <div class="col">
-            <select name="status" class="form-control">
-                <option value="">-- Select Status --</option>
+            <select name="status" class="form-control custom-dropdown">
+                <option value="" class="option-placeholder" >Search By Status</option>
                 @if (ViewContext.HttpContext.Request.Query["status"] == "pending")
                 {
                     <option value="pending" selected>Pending</option>
@@ -63,34 +57,47 @@
     </div>
 </form>
 
-<table class="table">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Original File Name</th>
-            <th>Version Number</th>
-            <th>Description</th>
-            <th>Created By</th>
-            <th>Tags</th>
-            <th>Approve Status</th>
-            <th>Action</th>
+            <th class="text-center text-nowrap">File Name</th>
+            <th class="text-center text-nowrap">Version</th>
+            <th class="text-center text-nowrap">Description</th>
+            <th class="text-center text-nowrap">Created By</th>
+            <th class="text-center text-nowrap">Tags</th>
+            <th class="text-center text-nowrap">Status</th>
+            <th class="text-center text-nowrap">Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var detail in Model)
         {
             <tr>
-                <td>@detail.OriginalFileName</td>
-                <td>@detail.VersionNumber</td>
-                <td>@detail.Description</td>
-                <td>@detail.CreatedBy</td>
-                <td>
+                <td class="text-center text-nowrap">@detail.OriginalFileName</td>
+                <td class="text-center text-nowrap">@detail.VersionNumber</td>
+                <td class="text-center">@detail.Description</td>
+                <td class="text-center text-nowrap">@detail.CreatedBy</td>
+                <td class="text-center">
                     @foreach (var tag in detail.Tags)
                     {
                         <span class="badge bg-info">@tag</span>
                     }
                 </td>
-                <td>@detail.ApproveStatus</td>
-                <td>
+                <td class="text-center text-nowrap">
+                    @if (detail.ApproveStatus == "approve")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else if (detail.ApproveStatus == "pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@detail.ApproveStatus</span>
+                    }
+                </td>
+                <td class="text-center text-nowrap">
                     <a asp-action="ViewDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
                         <i class="bi bi-eye"></i>
                     </a>

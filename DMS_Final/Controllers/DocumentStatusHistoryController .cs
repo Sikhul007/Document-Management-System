@@ -1,7 +1,7 @@
 ﻿using DMS_Final.Attribute;
 using DMS_Final.Models;
 using DMS_Final.Services;
-using DMS_Final.Services.Pagination;
+using DMS_Final.Services.Pagination.DocumentStatusHistory;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -20,29 +20,15 @@ namespace DMS_Final.Controllers
         }
 
 
-        //[RoleAuthorize("Admin")]
-        //public IActionResult ShowHistory()
-        //{
-        //    var history = _documentStatusHistoryService.GetAll();
-        //    // Specify the full relative path to the view since it's under Views/DocumentHistory/
-        //    return View("~/Views/DocumentHistory/DocumentStatusHistory.cshtml", history);
-        //}
-
-
         [RoleAuthorize("Admin")]
-        public IActionResult ShowHistory(int page = 1, int pageSize = 8)
+        public IActionResult ShowHistory(int page = 1, int pageSize = 7)
         {
             var result = _documentStatusHistoryPaginationService.GetPaged(page, pageSize);
 
             ViewBag.CurrentPage = result.PageNumber;
             ViewBag.TotalPages = result.TotalPages;
 
-            return View("~/Views/DocumentHistory/DocumentStatusHistory.cshtml", result.Items);
+            return View("~/Views/DocumentHistory/DocumentStatusHistory.cshtml", result);
         }
-
-
-
-
-
     }
 }

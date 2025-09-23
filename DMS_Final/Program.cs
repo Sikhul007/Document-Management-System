@@ -8,7 +8,7 @@ using DMS_Final.Repository.Pagination;
 using DMS_Final.Repository.User;
 using DMS_Final.Services;
 using DMS_Final.Services.Admin;
-using DMS_Final.Services.Pagination;
+using DMS_Final.Services.Pagination.DocumentStatusHistory;
 using DMS_Final.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);

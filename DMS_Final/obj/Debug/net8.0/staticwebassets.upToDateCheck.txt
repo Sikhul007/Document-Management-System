@@ -87,6 +87,7 @@ wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250916173802958
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250917164500257.pdf
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250917173836134.pdf
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250918142811771.pdf
+wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250921155603210.pdf
 wwwroot\uploads\Assignment_20250908153707315.pdf
 wwwroot\uploads\Assignment_20250914101525857.pdf
 wwwroot\uploads\Computer Networks-22062024_20250909105857453.pdf
@@ -98,6 +99,9 @@ wwwroot\uploads\Gitting Handnote (1)_20250918142226404.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250918142659492.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250918142945277.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250918152502010.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250921155603194.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250921163158067.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250921165624291.pdf
 wwwroot\uploads\Impact_20250908113335237.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250903164835521.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250903165101116.pdf
@@ -166,12 +170,15 @@ wwwroot\uploads\ML assignment(22-46484-1)_20250913161522166.pdf
 wwwroot\uploads\ML assignment(22-46484-1)_20250914094913195.pdf
 wwwroot\uploads\ML assignment(22-46484-1)_20250916105612717.pdf
 wwwroot\uploads\ML assignment(22-46484-1)_20250916114316433.pdf
+wwwroot\uploads\ML assignment(22-46484-1)_20250921155805199.pdf
+wwwroot\uploads\prescription_20250921155706019.pdf
 wwwroot\uploads\Presentation1 dot net_20250907151915608.pptx
 wwwroot\uploads\Presentation1 dot net_20250909151609740.pptx
 wwwroot\uploads\Presentation1 dot net_20250916114419448.pptx
 wwwroot\uploads\Product_Customer_Management_System_20250907094150079.pdf
 wwwroot\uploads\Product_Customer_Management_System_20250908155935174.pdf
 wwwroot\uploads\Product_Customer_Management_System_20250914101525849.pdf
+wwwroot\uploads\Recommendation letter draft_20250921155805207.pdf
 wwwroot\uploads\rm-mid_20250908141505497.pdf
 wwwroot\uploads\rm-mid_20250914094842169.pdf
 wwwroot\uploads\rm-viva-prep-1_20250913164840941.pdf

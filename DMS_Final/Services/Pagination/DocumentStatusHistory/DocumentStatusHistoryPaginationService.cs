@@ -1,6 +1,6 @@
 ﻿using DMS_Final.Models;
 using DMS_Final.Repository.Pagination;
-using DMS_Final.Services.Pagination;
+using DMS_Final.Services.Pagination.DocumentStatusHistory;
 
 public class DocumentStatusHistoryPaginationService : IDocumentStatusHistoryPaginationService
 {

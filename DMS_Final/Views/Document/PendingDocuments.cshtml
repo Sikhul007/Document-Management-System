@@ -22,12 +22,12 @@ else
                 <tr>
                     <th class="text-center text-nowrap">Title</th>
                     <th class="text-center text-nowrap">Uploaded Date</th>
-                    <th class="text-center text-nowrap">Description</th>
+                    <th class="text-center text-nowrap wide-description">Description</th>
                     <th class="text-center text-nowrap">Created By</th>
                     <th class="text-center text-nowrap">Created On</th>
-                    <th class="text-center text-nowrap">Original File Name</th>
+                    <th class="text-center text-nowrap">File Name</th>
                     <th class="text-center text-nowrap">Version</th>
-                    <th class="text-center text-nowrap">Status</th>
+                    @* <th class="text-center text-nowrap">Status</th> *@
                     <th class="text-center text-nowrap">Action</th>
                 </tr>
             </thead>
@@ -35,14 +35,14 @@ else
                 @foreach (var doc in Model)
                 {
                     <tr>
-                        <td class="text-center">@doc.Title</td>
-                        <td class="text-center">@doc.FileUploadedTime</td>
-                        <td class="text-center">@doc.Description</td>
-                        <td class="text-center">@doc.CreatedBy</td>
-                        <td class="text-center">@doc.CreatedOn</td>
+                        <td class="text-center text-nowrap">@doc.Title</td>
+                        <td class="text-center text-nowrap">@doc.FileUploadedTime.ToString("dd MMM. yy")</td>
+                        <td class="text-center wide-description">@doc.Description</td>
+                        <td class="text-center text-nowrap">@doc.CreatedBy</td>
+                        <td class="text-center text-nowrap">@doc.CreatedOn.ToString("dd MMM. yy")</td>
                         <td class="text-center">@doc.OriginalFileName</td>
-                        <td class="text-center">@doc.VersionNumber</td>
-                        <td class="text-center">@doc.ApproveStatus</td>
+                        <td class="text-center text-nowrap">@doc.VersionNumber</td>
+                        @* <td class="text-center">@doc.ApproveStatus</td> *@
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 @if (userRole == "Admin" || userRole == "Manager")
