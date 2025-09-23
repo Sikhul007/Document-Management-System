@@ -17,31 +17,31 @@
 else
 {
     <div class="table-responsive" style="overflow-x: auto;">
-        <table class="table table-hover table-bordered table-striped text-center align-middle">
+        <table class="table table-hover table-bordered table-striped align-middle">
             <thead class="table-primary">
                 <tr>
-                    <th class="text-center text-nowrap">Title</th>
-                    <th class="text-center text-nowrap">Uploaded Date</th>
-                    <th class="text-center text-nowrap wide-description">Description</th>
-                    <th class="text-center text-nowrap">Created By</th>
-                    <th class="text-center text-nowrap">Created On</th>
-                    <th class="text-center text-nowrap">File Name</th>
-                    <th class="text-center text-nowrap">Version</th>
-                    @* <th class="text-center text-nowrap">Status</th> *@
-                    <th class="text-center text-nowrap">Action</th>
+                    <th class="text-nowrap text-start">Title</th>
+                    <th class="text-nowrap text-start">Uploaded Date</th>
+                    <th class="text-nowrap wide-description text-start">Description</th>
+                    <th class="text-nowrap text-start">Created By</th>
+                    <th class="text-nowrap text-start">Created On</th>
+                    <th class="text-nowrap text-start">File Name</th>
+                    <th class="text-nowrap text-start">Version</th>
+                    @* <th class="text-nowrap text-start">Status</th> *@
+                    <th class="text-nowrap text-start">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var doc in Model)
                 {
                     <tr>
-                        <td class="text-center text-nowrap">@doc.Title</td>
-                        <td class="text-center text-nowrap">@doc.FileUploadedTime.ToString("dd MMM. yy")</td>
-                        <td class="text-center wide-description">@doc.Description</td>
-                        <td class="text-center text-nowrap">@doc.CreatedBy</td>
-                        <td class="text-center text-nowrap">@doc.CreatedOn.ToString("dd MMM. yy")</td>
-                        <td class="text-center">@doc.OriginalFileName</td>
-                        <td class="text-center text-nowrap">@doc.VersionNumber</td>
+                        <td class="text-nowrap text-start">@doc.Title</td>
+                        <td class="text-start text-nowrap">@doc.FileUploadedTime.ToString("dd MMM. yy")</td>
+                        <td class="text-start wide-description">@doc.Description</td>
+                        <td class="text-start text-nowrap">@doc.CreatedBy</td>
+                        <td class="text-start text-nowrap">@doc.CreatedOn.ToString("dd MMM. yy")</td>
+                        <td class="text-start">@doc.OriginalFileName</td>
+                        <td class="text-start text-nowrap">@doc.VersionNumber</td>
                         @* <td class="text-center">@doc.ApproveStatus</td> *@
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">

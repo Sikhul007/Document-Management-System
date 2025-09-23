@@ -253,7 +253,9 @@
                         foreach (var doc in recentDocs)
                         {
                             <tr>
-                                <td>@doc.OriginalFileName</td>
+                                <td style="max-width: 220px; word-break: break-all; white-space: normal;">
+                                    @doc.OriginalFileName
+                                </td>
                                 <td>@doc.CreatedBy</td>
                                 <td>@doc.CreatedOn.ToString("dd MMM. yy")</td>
                                 <td>

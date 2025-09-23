@@ -72,19 +72,19 @@ else
                     <table class="table table-bordered table-striped" style="table-layout:fixed; width:100%;">
                         <thead class="table-primary">
                             <tr>
-                                <th class="text-center" style="width:30%;">File Name</th>
-                                <th class="text-center" style="width:35%;">Description</th>
-                                <th class="text-center" style="width:10%;">Status</th>
-                                <th class="text-center" style="width:25%;">Action</th>
+                                <th class="text-start" style="width:33%;">File Name</th>
+                                <th class="text-start" style="width:40%;">Description</th>
+                                <th class="text-start" style="width:10%;">Status</th>
+                                <th class="text-start" style="width:17%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var file in versionFiles)
                             {
                                 <tr>
-                                    <td class="text-center" style="word-break:break-word;">@file.OriginalFileName</td>
-                                    <td class="text-center" style="word-break:break-word;">@file.Description</td>
-                                    <td class="text-center">
+                                    <td class="text-start" style="word-break:break-word;">@file.OriginalFileName</td>
+                                    <td class="text-start" style="word-break:break-word;">@file.Description</td>
+                                    <td class="text-start">
                                         @if (file.ApproveStatus == "approved")
                                         {
                                             <span class="badge bg-success">Approved</span>
@@ -98,7 +98,7 @@ else
                                             <span class="badge bg-secondary">@file.ApproveStatus</span>
                                         }
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-start">
                                         <div class="d-flex justify-content-center gap-2">
                                             <a asp-action="ViewDocument" asp-route-documentDetailId="@file.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
                                                 <i class="bi bi-eye"></i>

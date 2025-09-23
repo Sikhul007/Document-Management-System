@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Back 18925\\Backend\\DMS_Final\\DMS_Final.csproj": {}
+    "E:\\Back 23925\\Backend\\DMS_Final\\DMS_Final.csproj": {}
   },
   "projects": {
-    "E:\\Back 18925\\Backend\\DMS_Final\\DMS_Final.csproj": {
+    "E:\\Back 23925\\Backend\\DMS_Final\\DMS_Final.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Back 18925\\Backend\\DMS_Final\\DMS_Final.csproj",
+        "projectUniqueName": "E:\\Back 23925\\Backend\\DMS_Final\\DMS_Final.csproj",
         "projectName": "DMS_Final",
-        "projectPath": "E:\\Back 18925\\Backend\\DMS_Final\\DMS_Final.csproj",
+        "projectPath": "E:\\Back 23925\\Backend\\DMS_Final\\DMS_Final.csproj",
         "packagesPath": "C:\\Users\\SHIHAB\\.nuget\\packages\\",
-        "outputPath": "E:\\Back 18925\\Backend\\DMS_Final\\obj\\",
+        "outputPath": "E:\\Back 23925\\Backend\\DMS_Final\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

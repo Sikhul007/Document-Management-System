@@ -39,18 +39,18 @@ else
         <table id="documentsTable" class="table table-hover table-bordered table-striped">
             <thead class="table-primary">
                 <tr>
-                    <th class="text-center text-nowrap sortable" data-col="0" data-type="text">Title <span class="sort-indicator"></span></th>
-                    <th class="text-center text-nowrap sortable" data-col="1" data-type="text">Description <span class="sort-indicator"></span></th>
-                    <th class="text-center text-nowrap">Action</th>
+                    <th class="text-start text-nowrap sortable" style="width:20%;" data-col="0" data-type="text">Title <span class="sort-indicator"></span></th>
+                    <th class="text-start text-nowrap sortable" style="width:65%;" data-col="1" data-type="text">Description <span class="sort-indicator"></span></th>
+                    <th class="text-start text-nowrap" style="width:15%;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var doc in Model)
                 {
                     <tr>
-                        <td class="text-center text-nowrap" data-sort-value="@doc.Title.ToLower()">@doc.Title</td>
-                        <td class="text-center" data-sort-value="@doc.Description.ToLower()">@doc.Description</td>
-                        <td class="text-center text-nowrap">
+                        <td class="text-start text-nowrap" style="width:20%;" data-sort-value="@doc.Title.ToLower()">@doc.Title</td>
+                        <td class="text-start" style="width:65%;" data-sort-value="@doc.Description.ToLower()">@doc.Description</td>
+                        <td class="text-start text-nowrap" style="width:15%;">
                             <div class="d-flex justify-content-center gap-2">
                                 <a asp-action="EditDocument" asp-controller="Document" asp-route-documentId="@doc.Id" class="btn btn-info btn-sm" title="Quick Edit">
                                     <i class="bi bi-file-earmark-text-fill"></i>
@@ -67,6 +67,22 @@ else
                 }
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+            Showing <span id="startRecord">1</span> to <span id="endRecord">10</span> of <span id="totalRecords">@Model.Count</span> entries
+        </div>
+        <div>
+            <ul class="pagination mb-0">
+                <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+                <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+            </ul>
+        </div>
     </div>
 }
 
@@ -94,12 +110,12 @@ else
         }
 
         th.sorted-asc .sort-indicator::after {
-            content: 'A-Z';
+            content: '▲';
             font-size: 0.7em;
         }
 
         th.sorted-desc .sort-indicator::after {
-            content: 'Z-A';
+            content: '▼';
             font-size: 0.7em;
         }
 
@@ -107,17 +123,98 @@ else
             content: '⇅';
             opacity: 0.5;
         }
+
+        .pagination .page-link {
+            color: #007bff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
     </style>
     <script>
         $(function () {
+            // Pagination variables
+            let currentPage = 1;
+            const rowsPerPage = 5;
+            let allRows = [];
+            let filteredRows = [];
+
+            // Initialize pagination
+            function initPagination() {
+                allRows = Array.from($('#documentsTable tbody tr'));
+                filteredRows = [...allRows];
+                updatePagination();
+                showPage(currentPage);
+            }
+
+            // Show specific page
+            function showPage(page) {
+                const startIndex = (page - 1) * rowsPerPage;
+                const endIndex = startIndex + rowsPerPage;
+
+                // Hide all rows first
+                $('#documentsTable tbody tr').hide();
+
+                // Show only rows for current page
+                filteredRows.slice(startIndex, endIndex).forEach(row => {
+                    $(row).show();
+                });
+
+                // Update pagination info
+                const totalRecords = filteredRows.length;
+                const startRecord = totalRecords === 0 ? 0 : startIndex + 1;
+                const endRecord = Math.min(endIndex, totalRecords);
+
+                $('#startRecord').text(startRecord);
+                $('#endRecord').text(endRecord);
+                $('#totalRecords').text(totalRecords);
+            }
+
+            // Update pagination controls
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                const $pagination = $('.pagination');
+
+                // Clear existing page items except prev/next
+                $pagination.find('.page-item').not(':first, :last').remove();
+
+                // Add page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    // Only show a limited number of page buttons
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        const $pageItem = $('<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>');
+                        if (i === currentPage) {
+                            $pageItem.addClass('active');
+                        }
+                        $('#nextPage').parent().before($pageItem);
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        const $ellipsis = $('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
+                        $('#nextPage').parent().before($ellipsis);
+                    }
+                }
+
+                // Update prev/next button states
+                $('#prevPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#nextPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+            }
+
             // Real-time search: Title and Description columns
             $('#documentSearch').on('input', function () {
-                var search = $(this).val().toLowerCase();
-                $('#documentsTable tbody tr').each(function () {
-                    var title = $(this).find('td').eq(0).text().toLowerCase();
-                    var description = $(this).find('td').eq(1).text().toLowerCase();
-                    $(this).toggle(title.includes(search) || description.includes(search));
+                const search = $(this).val().toLowerCase();
+
+                // Filter rows based on search term
+                filteredRows = allRows.filter(row => {
+                    const title = $(row).find('td').eq(0).text().toLowerCase();
+                    const description = $(row).find('td').eq(1).text().toLowerCase();
+                    return title.includes(search) || description.includes(search);
                 });
+
+                // Reset to first page and update display
+                currentPage = 1;
+                updatePagination();
+                showPage(currentPage);
             });
 
             // Sorting UI and logic
@@ -125,9 +222,8 @@ else
             let asc = true;
 
             $('.sortable').on('click', function () {
-                var col = $(this).data('col');
-                var colType = $(this).data('type');
-                var rows = $('#documentsTable tbody tr').get();
+                const col = $(this).data('col');
+                const colType = $(this).data('type');
 
                 // Toggle sort direction if same column clicked
                 if (lastSortedCol === col) {
@@ -140,9 +236,10 @@ else
                 $('.sortable').removeClass('sorted-asc sorted-desc');
                 $(this).addClass(asc ? 'sorted-asc' : 'sorted-desc');
 
-                rows.sort(function (a, b) {
-                    var valA = $(a).find('td').eq(col).data('sort-value');
-                    var valB = $(b).find('td').eq(col).data('sort-value');
+                // Sort filtered rows
+                filteredRows.sort(function (a, b) {
+                    let valA = $(a).find('td').eq(col).data('sort-value');
+                    let valB = $(b).find('td').eq(col).data('sort-value');
 
                     // If data-sort-value is not available, use text content
                     if (valA === undefined || valA === null) valA = $(a).find('td').eq(col).text();
@@ -157,12 +254,43 @@ else
                     return 0;
                 });
 
-                $.each(rows, function (index, row) {
-                    $('#documentsTable tbody').append(row);
-                });
+                // Reset to first page and update display
+                currentPage = 1;
+                updatePagination();
+                showPage(currentPage);
 
                 lastSortedCol = col;
             });
+
+            // Pagination event handlers
+            $(document).on('click', '#prevPage', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '#nextPage', function(e) {
+                e.preventDefault();
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '.pagination .page-item:not(.disabled) .page-link[data-page]', function(e) {
+                e.preventDefault();
+                currentPage = parseInt($(this).data('page'));
+                updatePagination();
+                showPage(currentPage);
+            });
+
+            // Initialize pagination on page load
+            initPagination();
         });
     </script>
 }

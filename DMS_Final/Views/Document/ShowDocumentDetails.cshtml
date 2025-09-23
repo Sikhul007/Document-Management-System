@@ -9,11 +9,11 @@
 <p><strong>Created By:</strong> @doc?.CreatedBy</p>
 <p><strong>Created On:</strong> @doc?.CreatedOn.ToString("yyyy-MM-dd")</p>
 
-<form method="get" asp-action="ShowDocumentDetails" asp-controller="Document">
-    <input type="hidden" name="id" value="@doc?.Id" />
-    <div class="row mb-2">
-        <div class="col">
-            <select name="tag" class="form-control custom-dropdown">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <form method="get" asp-action="ShowDocumentDetails" asp-controller="Document" id="filterForm">
+        <input type="hidden" name="id" value="@doc?.Id" />
+        <div class="d-flex flex-wrap gap-2">
+            <select name="tag" class="form-control custom-dropdown" onchange="document.getElementById('filterForm').submit();">
                 <option value="" class="option-placeholder">Search By Tags</option>
                 @if (allTags != null)
                 {
@@ -24,10 +24,8 @@
                     }
                 }
             </select>
-        </div>
-        <div class="col">
-            <select name="status" class="form-control custom-dropdown">
-                <option value="" class="option-placeholder" >Search By Status</option>
+            @* <select name="status" class="form-control custom-dropdown" onchange="document.getElementById('filterForm').submit();">
+                <option value="" class="option-placeholder">Search By Status</option>
                 @if (ViewContext.HttpContext.Request.Query["status"] == "pending")
                 {
                     <option value="pending" selected>Pending</option>
@@ -36,7 +34,6 @@
                 {
                     <option value="pending">Pending</option>
                 }
-
                 @if (ViewContext.HttpContext.Request.Query["status"] == "approved")
                 {
                     <option value="approved" selected>Approved</option>
@@ -45,67 +42,187 @@
                 {
                     <option value="approved">Approved</option>
                 }
-            </select>
+            </select> *@
         </div>
-        <div class="col">
-            <input type="text" name="version" class="form-control" placeholder="Search by Version" value="@(ViewContext.HttpContext.Request.Query["version"])" />
-        </div>
-        <div class="col">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a asp-action="ShowDocumentDetails" asp-route-id="@doc?.Id" class="btn btn-secondary ms-2">Clear All</a>
-        </div>
-    </div>
-</form>
+    </form>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th class="text-center text-nowrap">File Name</th>
-            <th class="text-center text-nowrap">Version</th>
-            <th class="text-center text-nowrap">Description</th>
-            <th class="text-center text-nowrap">Created By</th>
-            <th class="text-center text-nowrap">Tags</th>
-            <th class="text-center text-nowrap">Status</th>
-            <th class="text-center text-nowrap">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var detail in Model)
-        {
+    <div style="position: relative; width: 250px;">
+        <input type="text"
+               id="documentSearch"
+               class="form-control ps-5"
+               placeholder="Search..."
+               autocomplete="off"
+               style="border-radius: 20px;">
+        <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;">
+            <i class="bi bi-search"></i>
+        </span>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table id="documentsTable" class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-primary">
             <tr>
-                <td class="text-center text-nowrap">@detail.OriginalFileName</td>
-                <td class="text-center text-nowrap">@detail.VersionNumber</td>
-                <td class="text-center">@detail.Description</td>
-                <td class="text-center text-nowrap">@detail.CreatedBy</td>
-                <td class="text-center">
-                    @foreach (var tag in detail.Tags)
-                    {
-                        <span class="badge bg-info">@tag</span>
-                    }
-                </td>
-                <td class="text-center text-nowrap">
-                    @if (detail.ApproveStatus == "approve")
-                    {
-                        <span class="badge bg-success">Approved</span>
-                    }
-                    else if (detail.ApproveStatus == "pending")
-                    {
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary">@detail.ApproveStatus</span>
-                    }
-                </td>
-                <td class="text-center text-nowrap">
-                    <a asp-action="ViewDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
-                        <i class="bi bi-eye"></i>
-                    </a>
-                    <a asp-action="DownloadDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-success btn-sm" title="Download Document">
-                        <i class="bi bi-cloud-arrow-down-fill"></i>
-                    </a>
-                </td>
+                <th class="text-start text-nowrap sortable" data-col="0" data-type="text">File Name <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="1" data-type="text">Version <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="2" data-type="text">Description <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="3" data-type="text">Created By <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="4" data-type="text">Tags <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="5" data-type="text">Status <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap">Action</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var detail in Model)
+            {
+                <tr data-filename="@detail.OriginalFileName.ToLower()"
+                    data-version="@detail.VersionNumber.ToString().ToLower()"
+                    data-description="@detail.Description?.ToLower()"
+                    data-createdby="@detail.CreatedBy?.ToLower()"
+                    data-tags="@string.Join(" ", detail.Tags).ToLower()"
+                    data-status="@detail.ApproveStatus.ToLower()">
+                    <td class="text-start" style="max-width:250px; word-break:break-all; white-space:normal;" data-sort-value="@detail.OriginalFileName.ToLower()">
+                        @detail.OriginalFileName
+                    </td>
+                    <td class="text-start text-nowrap" data-sort-value="@detail.VersionNumber.ToString()">@detail.VersionNumber</td>
+                    <td class="text-start" data-sort-value="@detail.Description?.ToLower()">@detail.Description</td>
+                    <td class="text-start text-nowrap" data-sort-value="@detail.CreatedBy?.ToLower()">@detail.CreatedBy</td>
+                    <td class="text-start" data-sort-value="@string.Join(" ", detail.Tags).ToLower()">
+                        @foreach (var tag in detail.Tags)
+                        {
+                            <span class="badge bg-info">@tag</span>
+                        }
+                    </td>
+                    <td class="text-start text-nowrap" data-sort-value="@detail.ApproveStatus.ToLower()">
+                        @if (detail.ApproveStatus == "approve")
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else if (detail.ApproveStatus == "pending")
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">@detail.ApproveStatus</span>
+                        }
+                    </td>
+                    <td class="text-start text-nowrap">
+                        <a asp-action="ViewDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a asp-action="DownloadDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-success btn-sm" title="Download Document">
+                            <i class="bi bi-cloud-arrow-down-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px !important;
         }
-    </tbody>
-</table>
+
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #007bff;
+        }
+
+        th.sortable:hover {
+            background: #e3f2fd;
+        }
+
+        th.sorted-asc .sort-indicator::after {
+            content: '▲';
+            font-size: 0.7em;
+        }
+
+        th.sorted-desc .sort-indicator::after {
+            content: '▼';
+            font-size: 0.7em;
+        }
+
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+            content: '⇅';
+            opacity: 0.5;
+        }
+    </style>
+    <script>
+        $(function () {
+            // Real-time search: all columns
+            $('#documentSearch').on('input', function () {
+                var search = $(this).val().toLowerCase();
+                $('#documentsTable tbody tr').each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(search));
+                });
+            });
+
+            // Sorting UI and logic
+            let lastSortedCol = null;
+            let asc = true;
+
+            $('.sortable').on('click', function () {
+                var col = $(this).data('col');
+                var colType = $(this).data('type');
+                var rows = $('#documentsTable tbody tr').get();
+
+                // Toggle sort direction if same column clicked
+                if (lastSortedCol === col) {
+                    asc = !asc;
+                } else {
+                    asc = true;
+                }
+
+                // Update UI classes
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(asc ? 'sorted-asc' : 'sorted-desc');
+
+                rows.sort(function (a, b) {
+                    var valA = $(a).find('td').eq(col).data('sort-value');
+                    var valB = $(b).find('td').eq(col).data('sort-value');
+
+                    // If data-sort-value is not available, use text content
+                    if (valA === undefined || valA === null) valA = $(a).find('td').eq(col).text();
+                    if (valB === undefined || valB === null) valB = $(b).find('td').eq(col).text();
+
+                    // Handle different column types
+                    if (colType === 'date') {
+                        // Date sorting
+                        var dateA = new Date(valA);
+                        var dateB = new Date(valB);
+                        if (!isNaN(dateA) && !isNaN(dateB)) {
+                            return asc ? dateA - dateB : dateB - dateA;
+                        }
+                    } else {
+                        // Text sorting (A-Z / Z-A)
+                        valA = valA.toString().toLowerCase();
+                        valB = valB.toString().toLowerCase();
+
+                        if (valA < valB) return asc ? -1 : 1;
+                        if (valA > valB) return asc ? 1 : -1;
+                        return 0;
+                    }
+                });
+
+                $.each(rows, function (index, row) {
+                    $('#documentsTable tbody').append(row);
+                });
+
+                lastSortedCol = col;
+            });
+        });
+    </script>
+}
