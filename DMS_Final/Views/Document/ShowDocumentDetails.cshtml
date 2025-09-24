@@ -24,25 +24,6 @@
                     }
                 }
             </select>
-            @* <select name="status" class="form-control custom-dropdown" onchange="document.getElementById('filterForm').submit();">
-                <option value="" class="option-placeholder">Search By Status</option>
-                @if (ViewContext.HttpContext.Request.Query["status"] == "pending")
-                {
-                    <option value="pending" selected>Pending</option>
-                }
-                else
-                {
-                    <option value="pending">Pending</option>
-                }
-                @if (ViewContext.HttpContext.Request.Query["status"] == "approved")
-                {
-                    <option value="approved" selected>Approved</option>
-                }
-                else
-                {
-                    <option value="approved">Approved</option>
-                }
-            </select> *@
         </div>
     </form>
 
@@ -84,7 +65,7 @@
                     <td class="text-start" style="max-width:250px; word-break:break-all; white-space:normal;" data-sort-value="@detail.OriginalFileName.ToLower()">
                         @detail.OriginalFileName
                     </td>
-                    <td class="text-start text-nowrap" data-sort-value="@detail.VersionNumber.ToString()">@detail.VersionNumber</td>
+                    <td class="text-center text-nowrap" data-sort-value="@detail.VersionNumber.ToString()">@detail.VersionNumber</td>
                     <td class="text-start" data-sort-value="@detail.Description?.ToLower()">@detail.Description</td>
                     <td class="text-start text-nowrap" data-sort-value="@detail.CreatedBy?.ToLower()">@detail.CreatedBy</td>
                     <td class="text-start" data-sort-value="@string.Join(" ", detail.Tags).ToLower()">

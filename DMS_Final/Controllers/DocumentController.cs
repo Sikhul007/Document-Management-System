@@ -28,7 +28,6 @@ namespace DMS_Final.Controllers
             return View(new DocumentModel());
         }
 
-
         [RoleAuthorize("Admin", "Developer")]
         [HttpPost]
         public IActionResult UploadDocument(DocumentModel model, List<IFormFile> Files, List<string> FileDescriptions, List<List<int>> TagIds)
@@ -65,17 +64,15 @@ namespace DMS_Final.Controllers
         [HttpGet]
         public IActionResult EditDocument(int documentId)
         {
-            // Get the document for the title (optional, for display)
             var document = _documentService.GetDocumentById(documentId);
 
-            // Get the latest files for this document
             var latestFiles = _documentService.GetLatestFilesByDocumentId(documentId);
 
             ViewBag.DocumentId = documentId;
             ViewBag.DocumentTitle = document?.Title ?? "Document";
             ViewBag.DocumentDescription = document?.Description ?? "";
 
-            return View(latestFiles); // Passes List<DocumentDetailsModel> to the view
+            return View(latestFiles);
         }
 
 
@@ -112,6 +109,7 @@ namespace DMS_Final.Controllers
         }
 
 
+
         [RoleAuthorize("Admin", "Developer")]
         [HttpPost]
         public IActionResult RejectDocument(int documentId, int documentDetailId, string notes = null)
@@ -136,7 +134,6 @@ namespace DMS_Final.Controllers
             if (document == null || documentDetail == null)
                 return NotFound();
 
-            // All tags
             var allTags = _documentService.GetAllTags();
             var selectedTags = _documentService.GetTagsByDocumentDetailsId(documentDetailId);
 
@@ -149,8 +146,6 @@ namespace DMS_Final.Controllers
 
             return View(document);
         }
-
-
 
         [RoleAuthorize("Admin", "Developer")]
         [HttpPost]
@@ -168,14 +163,12 @@ namespace DMS_Final.Controllers
             var createdFrom = HttpContext.Connection.RemoteIpAddress?.ToString();
             var userRole = HttpContext.Session.GetString("UserRole");
 
-            // Update the document title
             model.Title = Title;
 
-            // Pass TagIds to the service
             _documentService.UploadNewVersionMultiple(documentDetailId, documentId, model, Files, FileDescriptions, createdBy, createdFrom, userRole, TagIds);
 
             TempData["Message"] = "New version(s) uploaded successfully.";
-            return RedirectToAction("MyDocuments");
+            return RedirectToAction("EditDocument", "Document", new { documentId = documentId });
         }
 
 
@@ -240,6 +233,7 @@ namespace DMS_Final.Controllers
         }
 
 
+
         [RoleAuthorize("Admin")]
         [HttpGet]
         public IActionResult ShowDocumentDetails(int id, string tag, string status, string version)
@@ -247,7 +241,6 @@ namespace DMS_Final.Controllers
             var document = _documentService.GetDocumentById(id);
 
             List<DocumentDetailsModel> details;
-            // If any search parameter is provided, use search
             if (!string.IsNullOrWhiteSpace(tag) || !string.IsNullOrWhiteSpace(status) || !string.IsNullOrWhiteSpace(version))
             {
                 details = _documentService.Search(id, tag, status, version);
@@ -257,13 +250,13 @@ namespace DMS_Final.Controllers
                 details = _documentService.GetDocumentDetailsByDocumentId(id);
             }
 
-            // Get all tags from the database and pass to the view
             var allTags = _documentService.GetAllTags();
             ViewBag.AllTags = allTags;
 
             ViewBag.Document = document;
             return View(details);
         }
+
 
 
         [RoleAuthorize("Admin", "Developer")]
@@ -289,18 +282,12 @@ namespace DMS_Final.Controllers
             return View(details); 
         }
 
-        // FIXED Save edits to document info and file info (ADO.NET only)
+
+
+        [RoleAuthorize("Admin", "Developer")]
         [HttpPost]
-        public IActionResult SaveDocumentEdits(
-    int DocumentId,
-    string Title,
-    string Description,
-    List<int> FileIds,
-    List<string> FileDescriptions,
-    List<List<int>> TagIds,
-    List<List<IFormFile>> NewFiles)
+        public IActionResult SaveDocumentEdits(int DocumentId,string Title,string Description,List<int> FileIds,List<string> FileDescriptions,List<List<int>> TagIds,List<List<IFormFile>> NewFiles)
         {
-            // Update document info
             _documentService.UpdateDocumentInfo(DocumentId, Title, Description);
 
             var createdBy = HttpContext.Session.GetString("UserName");
@@ -312,7 +299,6 @@ namespace DMS_Final.Controllers
             {
                 var prevDetail = _documentService.GetDocumentDetailById(FileIds[i]);
 
-                // --- Check for new files ---
                 bool hasNewFiles = false;
                 List<IFormFile> validFiles = new List<IFormFile>();
 
@@ -328,12 +314,10 @@ namespace DMS_Final.Controllers
                     hasNewFiles = validFiles.Count > 0;
                 }
 
-                // --- Description changed? ---
                 string prevDesc = prevDetail.Description == null ? "" : prevDetail.Description.Trim();
                 string newDesc = FileDescriptions[i] == null ? "" : FileDescriptions[i].Trim();
                 bool descriptionChanged = !prevDesc.Equals(newDesc, StringComparison.OrdinalIgnoreCase);
 
-                // --- Tags changed? ---
                 List<string> prevTags = new List<string>();
                 if (prevDetail.Tags != null)
                 {
@@ -381,7 +365,6 @@ namespace DMS_Final.Controllers
                     }
                 }
 
-                // --- Create new version if something changed ---
                 if (hasNewFiles || descriptionChanged || tagsChanged)
                 {
                     if (hasNewFiles)
@@ -451,6 +434,7 @@ namespace DMS_Final.Controllers
         }
 
 
+
         [RoleAuthorize("Developer")]
         [HttpGet]
         public IActionResult DetailsWithNotes()
@@ -461,5 +445,61 @@ namespace DMS_Final.Controllers
         }
 
 
+
+
+
+
+
+
+        [RoleAuthorize("Admin", "Developer")]
+        [HttpPost]
+        public IActionResult CreateTag([FromBody] CreateTagRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(request.TagName))
+                {
+                    return BadRequest(new { success = false, message = "Tag name cannot be empty." });
+                }
+
+                var newTag = _documentService.CreateTag(request.TagName);
+                return Json(new { success = true, tag = new { id = newTag.Id, text = newTag.Name } });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = "Error creating tag: " + ex.Message });
+            }
+        }
+
+        public class CreateTagRequest
+        {
+            public string TagName { get; set; }
+        }
+
+
+        [RoleAuthorize("Admin", "Developer")]
+        [HttpGet]
+        public IActionResult SearchTags(string term)
+        {
+            try
+            {
+                var allTags = _documentService.GetAllTags();
+
+                var filteredTags = string.IsNullOrEmpty(term)
+                    ? allTags
+                    : allTags.Where(t => t.Name.ToLower().Contains(term.ToLower())).ToList();
+
+                var results = filteredTags.Select(t => new {
+                    id = t.Id,
+                    text = t.Name
+                }).ToList();
+
+                return Json(new { results = results });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = "Failed to search tags: " + ex.Message });
+            }
+        }
     }
 }

@@ -90,6 +90,7 @@ wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250918142811771
 wwwroot\uploads\3. Internship - Industry Supervisor Evaluation_20250921155603210.pdf
 wwwroot\uploads\Assignment_20250908153707315.pdf
 wwwroot\uploads\Assignment_20250914101525857.pdf
+wwwroot\uploads\c-basic_20250924114955618.pdf
 wwwroot\uploads\Computer Networks-22062024_20250909105857453.pdf
 wwwroot\uploads\Computer Networks-22062024_20250916114744074.pdf
 wwwroot\uploads\From_Resolution_to_Explanation__Real_ESRGAN_and_LIME_Analysis_of_Vision_Transformers_and_CNNs_for_Brain_Tumor_MRI_Classification_JOURNAL_FORMAT_20250923121020133.pdf
@@ -105,6 +106,8 @@ wwwroot\uploads\Gitting Handnote (1)_20250921155603194.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250921163158067.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250921165624291.pdf
 wwwroot\uploads\Gitting Handnote (1)_20250923145152800.pdf
+wwwroot\uploads\Gitting Handnote (1)_20250924112821212.pdf
+wwwroot\uploads\Gitting Handnote_20250924114955599.pdf
 wwwroot\uploads\Impact_20250908113335237.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250903164835521.pdf
 wwwroot\uploads\Internship Placement Letter- Sikhul Islam Shihab_20250903165101116.pdf
@@ -175,6 +178,7 @@ wwwroot\uploads\ML assignment(22-46484-1)_20250916105612717.pdf
 wwwroot\uploads\ML assignment(22-46484-1)_20250916114316433.pdf
 wwwroot\uploads\ML assignment(22-46484-1)_20250921155805199.pdf
 wwwroot\uploads\prescription_20250921155706019.pdf
+wwwroot\uploads\prescription_20250924101046591.pdf
 wwwroot\uploads\Presentation1 dot net_20250907151915608.pptx
 wwwroot\uploads\Presentation1 dot net_20250909151609740.pptx
 wwwroot\uploads\Presentation1 dot net_20250916114419448.pptx

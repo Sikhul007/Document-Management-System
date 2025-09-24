@@ -18,7 +18,6 @@ namespace DMS_Final.Repository.Document
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        // Documents
         public int InsertDocument(DocumentModel document, SqlConnection conn, SqlTransaction transaction)
         {
             string sql = @"INSERT INTO Documents (Title, Description, CreatedBy, CreatedOn, CreatedFrom)
@@ -35,6 +34,7 @@ namespace DMS_Final.Repository.Document
                 return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
+
 
         public List<DocumentModel> GetDocumentsByUser(string userName)
         {
@@ -70,7 +70,7 @@ namespace DMS_Final.Repository.Document
             return list;
         }
 
-        // DocumentDetails
+
         public int InsertDocumentDetails(DocumentDetailsModel details, SqlConnection conn, SqlTransaction transaction)
         {
             string sql = @"INSERT INTO DocumentDetails
@@ -97,6 +97,7 @@ namespace DMS_Final.Repository.Document
             }
         }
 
+
         public void SetArchiveStatus(int documentDetailId, bool isArchive, SqlConnection conn, SqlTransaction transaction)
         {
             string sql = "UPDATE DocumentDetails SET IsArchive = @IsArchive WHERE Id = @Id";
@@ -107,6 +108,7 @@ namespace DMS_Final.Repository.Document
                 cmd.ExecuteNonQuery();
             }
         }
+
 
         public void SetApproveStatus(int documentDetailId, string status, SqlConnection conn, SqlTransaction transaction)
         {
@@ -119,6 +121,7 @@ namespace DMS_Final.Repository.Document
             }
         }
 
+
         public void SetLastUpdateInfo(int documentDetailId, string lastUpdateBy, DateTime lastUpdateOn, SqlConnection conn, SqlTransaction transaction)
         {
             string sql = "UPDATE DocumentDetails SET LastUpdateBy = @LastUpdateBy, LastUpdateOn = @LastUpdateOn WHERE Id = @Id";
@@ -130,6 +133,7 @@ namespace DMS_Final.Repository.Document
                 cmd.ExecuteNonQuery();
             }
         }
+
 
         public List<DocumentModel> GetMyDocumentDetails(string userName)
         {
@@ -163,6 +167,7 @@ namespace DMS_Final.Repository.Document
             }
             return list;
         }
+
 
         // FIXED GetLatestFilesByDocumentId method
         public List<DocumentDetailsModel> GetLatestFilesByDocumentId(int documentId)
@@ -227,6 +232,7 @@ namespace DMS_Final.Repository.Document
             return list;
         }
 
+
         public List<DocumentDetailsModel> GetPendingDocumentDetailsWithHeader(string userName = null)
         {
             var list = new List<DocumentDetailsModel>();
@@ -283,6 +289,7 @@ namespace DMS_Final.Repository.Document
             return list;
         }
 
+
         // DocumentStatusHistories
         public void InsertStatusHistory(DocumentStatusHistoryModel history, SqlConnection conn, SqlTransaction transaction)
         {
@@ -303,6 +310,7 @@ namespace DMS_Final.Repository.Document
                 cmd.ExecuteNonQuery();
             }
         }
+
 
         public DocumentModel GetDocumentById(int documentId)
         {
@@ -336,6 +344,7 @@ namespace DMS_Final.Repository.Document
             }
             return null;
         }
+
 
         // FIXED GetDocumentDetailById method - CRITICAL FIX
         public DocumentDetailsModel GetDocumentDetailById(int documentDetailId)
@@ -400,6 +409,7 @@ namespace DMS_Final.Repository.Document
             }
         }
 
+
         public List<TagModel> GetAllTags()
         {
             var tags = new List<TagModel>();
@@ -425,6 +435,7 @@ namespace DMS_Final.Repository.Document
             return tags;
         }
 
+
         public void InsertDocumentTag(int documentDetailId, int tagId, SqlConnection conn, SqlTransaction transaction)
         {
             string sql = @"INSERT INTO DocumentTags (DocumentDetailsId, TagName)
@@ -436,6 +447,7 @@ namespace DMS_Final.Repository.Document
                 cmd.ExecuteNonQuery();
             }
         }
+
 
         public List<DocumentTagModel> GetTagsByDocumentDetailsId(int documentDetailsId)
         {
@@ -465,6 +477,7 @@ namespace DMS_Final.Repository.Document
             }
             return tags;
         }
+
 
         public List<DocumentModel> GetAllDocuments()
         {
@@ -498,6 +511,7 @@ namespace DMS_Final.Repository.Document
             }
             return list;
         }
+
 
         public List<DocumentDetailsModel> GetDocumentDetailsByDocumentId(int documentId)
         {
@@ -552,18 +566,14 @@ namespace DMS_Final.Repository.Document
             return details;
         }
 
+
         public List<DocumentDetailsModel> Search(int documentId, string tag, string status, string version)
         {
             var details = new List<DocumentDetailsModel>();
 
             using (var conn = new SqlConnection(_connectionString))
             {
-                string sql = @"
-SELECT dd.*
-FROM DocumentDetails dd
-WHERE dd.DocumentId = @DocumentId
-  AND (dd.ApproveStatus = 'pending' OR dd.ApproveStatus = 'approved')
-";
+                string sql = @"SELECT dd.* FROM DocumentDetails dd WHERE dd.DocumentId = @DocumentId AND (dd.ApproveStatus = 'pending' OR dd.ApproveStatus = 'approved')";
 
                 // Tag filter (inside EXISTS to avoid duplicates)
                 if (!string.IsNullOrEmpty(tag))
@@ -673,6 +683,7 @@ WHERE dd.DocumentId = @DocumentId
             }
         }
 
+
         public (DocumentModel, List<DocumentDetailsModel>) GetDocumentWithDetailsForEdit(int documentId)
         {
             var document = GetDocumentById(documentId);
@@ -695,6 +706,7 @@ WHERE dd.DocumentId = @DocumentId
                 }
             }
         }
+
 
         public void UpdateDocumentDetailInfo(int documentDetailId, string description, List<int> tagIds)
         {
@@ -727,6 +739,7 @@ WHERE dd.DocumentId = @DocumentId
                 }
             }
         }
+
 
         // FIXED InsertNewDocumentDetailVersion method
         public void InsertNewDocumentDetailVersion(int documentDetailId, string description, List<int> tagIds, string fileName, string originalFileName, string createdBy, string approveStatus)
@@ -822,6 +835,7 @@ WHERE dd.DocumentId = @DocumentId
         }
 
 
+
         public List<DocumentDetailsModel> GetDocumentVersionHistoryByUser(string userName, int documentId)
         {
             var result = new List<DocumentDetailsModel>();
@@ -885,7 +899,6 @@ WHERE dd.DocumentId = @DocumentId
         }
 
 
-
         public List<DocumentDetailsModel> GetDetailsWithNotes(string createdBy)
         {
             var result = new List<DocumentDetailsModel>();
@@ -947,8 +960,6 @@ WHERE dd.DocumentId = @DocumentId
         }
 
 
-
-
         // for admin to show recent 5 documents 
         public List<DocumentDetailsModel> GetRecentApprovedOrPendingDocuments(int count = 5)
         {
@@ -991,9 +1002,6 @@ WHERE dd.DocumentId = @DocumentId
             }
             return result;
         }
-
-
-
 
 
         // for user show his Recent 5 documents.
@@ -1041,9 +1049,6 @@ WHERE dd.DocumentId = @DocumentId
             return result;
         }
 
-
-
-
         // Monthly Pending Count
         public List<(int Year, int Month, int Count)> GetMonthlyPendingCount()
         {
@@ -1074,6 +1079,7 @@ WHERE dd.DocumentId = @DocumentId
             }
             return result;
         }
+
 
         // Monthly Approved Count
         public List<(int Year, int Month, int Count)> GetMonthlyApprovedCount()
@@ -1106,6 +1112,7 @@ WHERE dd.DocumentId = @DocumentId
             return result;
         }
 
+
         // Monthly Rejected Count
         public List<(int Year, int Month, int Count)> GetMonthlyRejectedCount()
         {
@@ -1137,6 +1144,46 @@ WHERE dd.DocumentId = @DocumentId
             return result;
         }
 
-        
+
+
+        public TagModel CreateTag(string tagName)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                // First check if tag already exists
+                string checkSql = "SELECT Id, Name FROM Tags WHERE Name = @Name";
+                using (var checkCmd = new SqlCommand(checkSql, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@Name", tagName.Trim());
+                    using (var reader = checkCmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new TagModel
+                            {
+                                Id = (int)reader["Id"],
+                                Name = reader["Name"].ToString()
+                            };
+                        }
+                    }
+                }
+
+                // If tag doesn't exist, create it
+                string insertSql = "INSERT INTO Tags (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();";
+                using (var insertCmd = new SqlCommand(insertSql, conn))
+                {
+                    insertCmd.Parameters.AddWithValue("@Name", tagName.Trim());
+                    int newTagId = Convert.ToInt32(insertCmd.ExecuteScalar());
+
+                    return new TagModel
+                    {
+                        Id = newTagId,
+                        Name = tagName.Trim()
+                    };
+                }
+            }
+        }
     }
 }

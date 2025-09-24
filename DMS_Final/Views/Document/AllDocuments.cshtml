@@ -10,7 +10,18 @@
     </a>
 </div>
 
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center">
+        <span class="me-2">Show</span>
+        <select id="rowsPerPage" class="form-select form-select-sm" style="width: auto;">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        <span class="ms-2">entries</span>
+    </div>
     <div style="position: relative; width: 250px;">
         <input type="text"
                id="documentSearch"
@@ -26,7 +37,7 @@
 
 <div class="table-responsive" style="overflow-x: auto;">
     <table id="documentsTable" class="table table-hover table-bordered table-striped text-center align-middle mb-0"
-       style="table-layout:fixed; width:100%;">
+           style="table-layout:fixed; width:100%;">
         <thead class="table-primary">
             <tr>
                 <th class="text-start sortable" style="width:17%;" data-col="0" data-type="text">Title <span class="sort-indicator"></span></th>
@@ -65,18 +76,22 @@
 </div>
 
 <!-- Pagination Controls -->
-<div class="d-flex justify-content-between align-items-center mt-3">
-    <div>
-        Showing <span id="startRecord">1</span> to <span id="endRecord">5</span> of <span id="totalRecords">@(Model.Count())</span> entries
-    </div>
-    <div>
-        <ul class="pagination mb-0">
-            <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
-            <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
-            <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
-            <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
-            <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
-        </ul>
+<div class="pagination-container bg-white border rounded shadow-sm py-3 mt-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="pagination-info">
+            Showing <span id="startRecord">1</span> to <span id="endRecord">5</span> of <span id="totalRecords">@(Model.Count())</span> entries
+        </div>
+        <nav aria-label="Document pagination">
+            <ul class="pagination mb-0">
+                <li class="page-item"><a class="page-link" href="#" id="firstPage" title="First Page">First</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+                <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="lastPage" title="Last Page">Last</a></li>
+            </ul>
+        </nav>
     </div>
 </div>
 
@@ -126,20 +141,57 @@
             opacity: 0.5;
         }
 
-        .pagination .page-link {
-            color: #007bff;
+        /* Enhanced pagination styling */
+        .pagination-container {
+            background-color: #fff;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 12px 15px;
         }
 
-        .pagination .page-item.active .page-link {
-            background-color: #007bff;
-            border-color: #007bff;
+        .pagination-info {
+            font-size: 0.9rem;
+            color: #6c757d;
         }
+
+        .pagination {
+            margin-bottom: 0;
+        }
+
+            .pagination .page-link {
+                color: #007bff;
+                border-radius: 0.25rem;
+                margin: 0 2px;
+                min-width: 36px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+
+                .pagination .page-link:hover {
+                    background-color: #e9ecef;
+                    border-color: #dee2e6;
+                }
+
+            .pagination .page-item.active .page-link {
+                background-color: #007bff;
+                border-color: #007bff;
+                color: white;
+            }
+
+            .pagination .page-item.disabled .page-link {
+                color: #6c757d;
+                pointer-events: none;
+                opacity: 0.6;
+            }
     </style>
     <script>
         $(function () {
             // Pagination variables
             let currentPage = 1;
-            const rowsPerPage = 5;
+            let rowsPerPage = 10; // Default value
             let allRows = [];
             let filteredRows = [];
 
@@ -179,8 +231,8 @@
                 const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
                 const $pagination = $('.pagination');
 
-                // Clear existing page items except prev/next
-                $pagination.find('.page-item').not(':first, :last').remove();
+                // Clear existing page items except first, prev, next, last
+                $pagination.find('.page-item').not(':first, :nth-child(2), :nth-last-child(2), :last').remove();
 
                 // Add page numbers
                 for (let i = 1; i <= totalPages; i++) {
@@ -197,10 +249,20 @@
                     }
                 }
 
-                // Update prev/next button states
+                // Update prev/next/first/last button states
+                $('#firstPage').parent().toggleClass('disabled', currentPage === 1);
                 $('#prevPage').parent().toggleClass('disabled', currentPage === 1);
                 $('#nextPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+                $('#lastPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
             }
+
+            // Handle rows per page change
+            $('#rowsPerPage').on('change', function() {
+                rowsPerPage = parseInt($(this).val());
+                currentPage = 1; // Reset to first page when changing rows per page
+                updatePagination();
+                showPage(currentPage);
+            });
 
             // Real-time search: all columns
             $('#documentSearch').on('input', function () {
@@ -274,6 +336,15 @@
             });
 
             // Pagination event handlers
+            $(document).on('click', '#firstPage', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
             $(document).on('click', '#prevPage', function(e) {
                 e.preventDefault();
                 if (currentPage > 1) {
@@ -288,6 +359,16 @@
                 const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
                 if (currentPage < totalPages) {
                     currentPage++;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '#lastPage', function(e) {
+                e.preventDefault();
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
                     updatePagination();
                     showPage(currentPage);
                 }

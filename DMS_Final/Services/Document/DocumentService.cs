@@ -39,7 +39,6 @@ public class DocumentService : IDocumentService
         return _documentRepository.GetPendingDocumentDetailsWithHeader(userName);
     }
 
-
     public void UploadMultipleFiles(DocumentModel model, List<IFormFile> files, List<string> fileDescriptions, string createdBy, string createdFrom, string userRole, List<List<int>> tagIds)
     {
         if (files == null || fileDescriptions == null || tagIds == null ||
@@ -196,7 +195,6 @@ public class DocumentService : IDocumentService
         }
     }
 
-
     public void ApproveDocument(int documentDetailId, int documentId, string approver, string approverIp, string notes = null)
     {
         using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -338,8 +336,6 @@ public class DocumentService : IDocumentService
             Console.WriteLine($"Failed to create rejection notification: {ex.Message}");
         }
     }
-
-
 
     public void UploadNewVersionMultiple(
         int parentDetailId,
@@ -577,15 +573,7 @@ public class DocumentService : IDocumentService
         _documentRepository.UpdateDocumentDetailInfo(documentDetailId, description, tagIds);
     }
 
-    public void InsertNewDocumentDetailVersion(
-    int parentDetailId,
-    string description,
-    List<int> tagIds,
-    string fileName,
-    string originalFileName,
-    string createdBy,
-    string approveStatus,
-    string notes = null)
+    public void InsertNewDocumentDetailVersion(int parentDetailId, string description, List<int> tagIds, string fileName, string originalFileName, string createdBy, string approveStatus, string notes = null)
     {
         using (var conn = new SqlConnection(_connectionString))
         {
@@ -673,12 +661,10 @@ public class DocumentService : IDocumentService
         return _documentRepository.GetDetailsWithNotes(createdBy);
     }
 
-
     public List<DocumentDetailsModel> GetRecentApprovedOrPendingDocuments(int count = 5)
     {
         return _documentRepository.GetRecentApprovedOrPendingDocuments(count);
     }
-
 
     public List<DocumentDetailsModel> GetRecentApprovedOrPendingDocumentsUser(string userName, int count = 5)
     {
@@ -693,4 +679,10 @@ public class DocumentService : IDocumentService
 
     public List<(int Year, int Month, int Count)> GetMonthlyRejectedCount()
         => _documentRepository.GetMonthlyRejectedCount();
+
+
+    public TagModel CreateTag(string tagName)
+    {
+        return _documentRepository.CreateTag(tagName);
+    }
 }

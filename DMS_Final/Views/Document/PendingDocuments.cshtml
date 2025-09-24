@@ -16,33 +16,56 @@
 }
 else
 {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+            <span class="me-2">Show</span>
+            <select id="rowsPerPage" class="form-select form-select-sm" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <span class="ms-2">entries</span>
+        </div>
+        <div style="position: relative; width: 250px;">
+            <input type="text"
+                   id="documentSearch"
+                   class="form-control ps-5"
+                   placeholder="Search..."
+                   autocomplete="off"
+                   style="border-radius: 20px;">
+            <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;">
+                <i class="bi bi-search"></i>
+            </span>
+        </div>
+    </div>
+
     <div class="table-responsive" style="overflow-x: auto;">
-        <table class="table table-hover table-bordered table-striped align-middle">
+        <table id="documentsTable" class="table table-hover table-bordered table-striped align-middle">
             <thead class="table-primary">
                 <tr>
-                    <th class="text-nowrap text-start">Title</th>
-                    <th class="text-nowrap text-start">Uploaded Date</th>
-                    <th class="text-nowrap wide-description text-start">Description</th>
-                    <th class="text-nowrap text-start">Created By</th>
-                    <th class="text-nowrap text-start">Created On</th>
-                    <th class="text-nowrap text-start">File Name</th>
-                    <th class="text-nowrap text-start">Version</th>
-                    @* <th class="text-nowrap text-start">Status</th> *@
-                    <th class="text-nowrap text-start">Action</th>
+                    <th class="text-nowrap text-start sortable" style="width:12%;" data-col="0" data-type="text">Title <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap text-start sortable" style="width:10%;" data-col="1" data-type="date">Uploaded Date <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap wide-description text-start sortable" style="width:20%;" data-col="2" data-type="text">Description <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap text-start sortable" style="width:10%;" data-col="3" data-type="text">Created By <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap text-start sortable" style="width:10%;" data-col="4" data-type="date">Created On <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap text-start sortable" style="width:15%;" data-col="5" data-type="text">File Name <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap text-start sortable" style="width:8%;" data-col="6" data-type="text">Version <span class="sort-indicator"></span></th>
+                    <th class="text-nowrap text-start" style="width:15%;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var doc in Model)
                 {
                     <tr>
-                        <td class="text-nowrap text-start">@doc.Title</td>
-                        <td class="text-start text-nowrap">@doc.FileUploadedTime.ToString("dd MMM. yy")</td>
-                        <td class="text-start wide-description">@doc.Description</td>
-                        <td class="text-start text-nowrap">@doc.CreatedBy</td>
-                        <td class="text-start text-nowrap">@doc.CreatedOn.ToString("dd MMM. yy")</td>
-                        <td class="text-start">@doc.OriginalFileName</td>
-                        <td class="text-start text-nowrap">@doc.VersionNumber</td>
-                        @* <td class="text-center">@doc.ApproveStatus</td> *@
+                        <td class="text-nowrap text-start" data-sort-value="@doc.Title.ToLower()">@doc.Title</td>
+                        <td class="text-start text-nowrap" data-sort-value="@doc.FileUploadedTime.ToString("o")">@doc.FileUploadedTime.ToString("dd MMM. yy")</td>
+                        <td class="text-start wide-description" data-sort-value="@doc.Description.ToLower()">@doc.Description</td>
+                        <td class="text-start text-nowrap" data-sort-value="@doc.CreatedBy.ToLower()">@doc.CreatedBy</td>
+                        <td class="text-start text-nowrap" data-sort-value="@doc.CreatedOn.ToString("o")">@doc.CreatedOn.ToString("dd MMM. yy")</td>
+                        <td class="text-start" data-sort-value="@doc.OriginalFileName.ToLower()">@doc.OriginalFileName</td>
+                        <td class="text-center text-nowrap" data-sort-value="@doc.VersionNumber">@doc.VersionNumber</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 @if (userRole == "Admin" || userRole == "Manager")
@@ -58,7 +81,7 @@ else
                                     <!-- Reject button triggers modal -->
                                     <form style="display:inline;">
                                         <button type="button" class="btn btn-danger btn-sm" title="Reject"
-                                            onclick="openRejectModal('@doc.DocumentId', '@doc.Id')">
+                                                onclick="openRejectModal('@doc.DocumentId', '@doc.Id')">
                                             <i class="bi bi-x-circle"></i>
                                         </button>
                                     </form>
@@ -77,6 +100,26 @@ else
                 }
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-container bg-white border rounded shadow-sm py-3 mt-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="pagination-info">
+                Showing <span id="startRecord">1</span> to <span id="endRecord">10</span> of <span id="totalRecords">@Model.Count</span> entries
+            </div>
+            <nav aria-label="Document pagination">
+                <ul class="pagination mb-0">
+                    <li class="page-item"><a class="page-link" href="#" id="firstPage" title="First Page">First</a></li>
+                    <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                    <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="#" id="lastPage" title="Last Page">Last</a></li>
+                </ul>
+            </nav>
+        </div>
     </div>
 }
 
@@ -107,13 +150,302 @@ else
 </div>
 
 @section Scripts {
-<script>
-    function openRejectModal(documentId, documentDetailId) {
-        document.getElementById('rejectDocumentId').value = documentId;
-        document.getElementById('rejectDocumentDetailId').value = documentDetailId;
-        document.getElementById('notes').value = '';
-        var modal = new bootstrap.Modal(document.getElementById('rejectModal'));
-        modal.show();
-    }
-</script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function openRejectModal(documentId, documentDetailId) {
+            document.getElementById('rejectDocumentId').value = documentId;
+            document.getElementById('rejectDocumentDetailId').value = documentDetailId;
+            document.getElementById('notes').value = '';
+            var modal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            modal.show();
+        }
+
+        $(function () {
+            // Pagination variables
+            let currentPage = 1;
+            let rowsPerPage = 10; // Default value
+            let allRows = [];
+            let filteredRows = [];
+
+            // Initialize pagination
+            function initPagination() {
+                allRows = Array.from($('#documentsTable tbody tr'));
+                filteredRows = [...allRows];
+                updatePagination();
+                showPage(currentPage);
+            }
+
+            // Show specific page
+            function showPage(page) {
+                const startIndex = (page - 1) * rowsPerPage;
+                const endIndex = startIndex + rowsPerPage;
+
+                // Hide all rows first
+                $('#documentsTable tbody tr').hide();
+
+                // Show only rows for current page
+                filteredRows.slice(startIndex, endIndex).forEach(row => {
+                    $(row).show();
+                });
+
+                // Update pagination info
+                const totalRecords = filteredRows.length;
+                const startRecord = totalRecords === 0 ? 0 : startIndex + 1;
+                const endRecord = Math.min(endIndex, totalRecords);
+
+                $('#startRecord').text(startRecord);
+                $('#endRecord').text(endRecord);
+                $('#totalRecords').text(totalRecords);
+            }
+
+            // Update pagination controls
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                const $pagination = $('.pagination');
+
+                // Clear existing page items except first, prev, next, last
+                $pagination.find('.page-item').not(':first, :nth-child(2), :nth-last-child(2), :last').remove();
+
+                // Add page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    // Only show a limited number of page buttons
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        const $pageItem = $('<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>');
+                        if (i === currentPage) {
+                            $pageItem.addClass('active');
+                        }
+                        $('#nextPage').parent().before($pageItem);
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        const $ellipsis = $('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
+                        $('#nextPage').parent().before($ellipsis);
+                    }
+                }
+
+                // Update prev/next/first/last button states
+                $('#firstPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#prevPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#nextPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+                $('#lastPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+            }
+
+            // Handle rows per page change
+            $('#rowsPerPage').on('change', function() {
+                rowsPerPage = parseInt($(this).val());
+                currentPage = 1; // Reset to first page when changing rows per page
+                updatePagination();
+                showPage(currentPage);
+            });
+
+            // Real-time search: all columns
+            $('#documentSearch').on('input', function () {
+                const search = $(this).val().toLowerCase();
+
+                // Filter rows based on search term
+                filteredRows = allRows.filter(row => {
+                    const rowText = $(row).text().toLowerCase();
+                    return rowText.includes(search);
+                });
+
+                // Reset to first page and update display
+                currentPage = 1;
+                updatePagination();
+                showPage(currentPage);
+            });
+
+            // Sorting UI and logic
+            let lastSortedCol = null;
+            let asc = true;
+
+            $('.sortable').on('click', function () {
+                const col = $(this).data('col');
+                const colType = $(this).data('type');
+
+                // Toggle sort direction if same column clicked
+                if (lastSortedCol === col) {
+                    asc = !asc;
+                } else {
+                    asc = true;
+                }
+
+                // Update UI classes
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(asc ? 'sorted-asc' : 'sorted-desc');
+
+                // Sort filtered rows
+                filteredRows.sort(function (a, b) {
+                    let valA = $(a).find('td').eq(col).data('sort-value');
+                    let valB = $(b).find('td').eq(col).data('sort-value');
+
+                    // If data-sort-value is not available, use text content
+                    if (valA === undefined || valA === null) valA = $(a).find('td').eq(col).text();
+                    if (valB === undefined || valB === null) valB = $(b).find('td').eq(col).text();
+
+                    // Handle different column types
+                    if (colType === 'date') {
+                        // Date sorting
+                        const dateA = new Date(valA);
+                        const dateB = new Date(valB);
+                        if (!isNaN(dateA) && !isNaN(dateB)) {
+                            return asc ? dateA - dateB : dateB - dateA;
+                        }
+                    } else {
+                        // Text sorting (A-Z / Z-A)
+                        valA = valA.toString().toLowerCase();
+                        valB = valB.toString().toLowerCase();
+
+                        if (valA < valB) return asc ? -1 : 1;
+                        if (valA > valB) return asc ? 1 : -1;
+                        return 0;
+                    }
+                });
+
+                // Reset to first page and update display
+                currentPage = 1;
+                updatePagination();
+                showPage(currentPage);
+
+                lastSortedCol = col;
+            });
+
+            // Pagination event handlers
+            $(document).on('click', '#firstPage', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '#prevPage', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '#nextPage', function(e) {
+                e.preventDefault();
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '#lastPage', function(e) {
+                e.preventDefault();
+                const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    updatePagination();
+                    showPage(currentPage);
+                }
+            });
+
+            $(document).on('click', '.pagination .page-item:not(.disabled) .page-link[data-page]', function(e) {
+                e.preventDefault();
+                currentPage = parseInt($(this).data('page'));
+                updatePagination();
+                showPage(currentPage);
+            });
+
+            // Initialize pagination on page load
+            initPagination();
+        });
+    </script>
+
+    <style>
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px !important;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #007bff;
+        }
+
+        th.sortable:hover {
+            background: #e3f2fd;
+        }
+
+        th.sorted-asc .sort-indicator::after {
+            content: '▲';
+            font-size: 0.7em;
+        }
+
+        th.sorted-desc .sort-indicator::after {
+            content: '▼';
+            font-size: 0.7em;
+        }
+
+        th.sortable[data-type="date"].sorted-asc .sort-indicator::after {
+            content: '▲';
+        }
+
+        th.sortable[data-type="date"].sorted-desc .sort-indicator::after {
+            content: '▼';
+        }
+
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+            content: '⇅';
+            opacity: 0.5;
+        }
+
+        /* Enhanced pagination styling */
+        .pagination-container {
+            background-color: #fff;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 12px 15px;
+        }
+
+        .pagination-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .pagination {
+            margin-bottom: 0;
+        }
+
+            .pagination .page-link {
+                color: #007bff;
+                border-radius: 0.25rem;
+                margin: 0 2px;
+                min-width: 36px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+
+                .pagination .page-link:hover {
+                    background-color: #e9ecef;
+                    border-color: #dee2e6;
+                }
+
+            .pagination .page-item.active .page-link {
+                background-color: #007bff;
+                border-color: #007bff;
+                color: white;
+            }
+
+            .pagination .page-item.disabled .page-link {
+                color: #6c757d;
+                pointer-events: none;
+                opacity: 0.6;
+            }
+    </style>
 }
