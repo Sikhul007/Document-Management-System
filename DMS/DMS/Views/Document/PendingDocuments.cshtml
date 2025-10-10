@@ -1,0 +1,430 @@
+﻿@model List<DMS.Models.DocumentDetailsModel>
+@{
+    ViewBag.Title = "Pending Documents";
+    var userRole = ViewBag.UserRole as string;
+}
+
+<h2 class="text-start fw-semibold text-primary mb-2" style="letter-spacing:0.5px; font-size:1.4rem;">
+    <i class="bi bi-hourglass-split me-2 text-warning"></i>
+    @ViewBag.Title
+</h2>
+<hr class="mb-3" />
+
+<div class="d-flex justify-content-between align-items-center mb-2 small">
+    <div class="d-flex align-items-center">
+        <span class="me-1">Show</span>
+        <select id="rowsPerPage" class="form-select form-select-sm" style="width:auto;">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        <span class="ms-1">entries</span>
+    </div>
+    <div style="position: relative; width: 220px;">
+        <input type="text"
+               id="documentSearch"
+               class="form-control form-control-sm ps-5"
+               placeholder="Search..."
+               autocomplete="off"
+               style="border-radius: 20px;">
+        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #888; font-size:0.9rem;">
+            <i class="bi bi-search"></i>
+        </span>
+    </div>
+</div>
+
+<div class="table-responsive" style="overflow-x: auto;">
+    <table id="documentsTable" class="table table-sm table-hover table-bordered table-striped align-middle shadow-sm">
+        <thead class="table-primary small">
+            <tr>
+                <th class="text-wrap text-start sortable" style="width:10%;" data-col="Title">
+                    Title <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-start sortable" style="width:10%;" data-col="FileUploadedTime">
+                    Uploaded Date <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-start sortable" style="width:20%;" data-col="Description">
+                    Description <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-start sortable" style="width:10%;" data-col="CreatedBy">
+                    Created By <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-start sortable" style="width:10%;" data-col="DocumentCreatedOn">
+                    Created On <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-start sortable" style="width:17%;" data-col="OriginalFileName">
+                    File Name <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-center sortable" style="width:8%;" data-col="VersionNumber">
+                    Version <span class="sort-indicator"></span>
+                </th>
+                <th class="text-nowrap text-center" style="width:15%;">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody class="small" id="documentsTableBody">
+            <!-- Data will be loaded here via AJAX -->
+        </tbody>
+    </table>
+</div>
+
+<div id="noDataMessage" class="text-center py-4" style="display:none;">
+    <p>No pending documents.</p>
+</div>
+
+<!-- Pagination -->
+<div class="pagination-container bg-white border rounded shadow-sm py-2 px-3 mt-2 small">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="pagination-info">
+            Showing <span id="startRecord">0</span> to <span id="endRecord">0</span> of <span id="totalRecords">0</span> entries
+        </div>
+        <nav aria-label="Document pagination">
+            <ul class="pagination pagination-sm mb-0" id="paginationList">
+                <li class="page-item"><a class="page-link" href="#" id="firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="lastPage">Last</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <form id="rejectForm" method="post" asp-action="RejectDocument">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title" id="rejectModalLabel">Reject Document</h6>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body small">
+                    <input type="hidden" name="documentId" id="rejectDocumentId" />
+                    <input type="hidden" name="documentDetailId" id="rejectDocumentDetailId" />
+                    <div class="mb-2">
+                        <label for="notes" class="form-label">Reason (optional)</label>
+                        <textarea class="form-control form-control-sm" name="notes" id="notes" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var userRole = '@userRole';
+
+        function openRejectModal(documentId, documentDetailId) {
+            $('#rejectDocumentId').val(documentId);
+            $('#rejectDocumentDetailId').val(documentDetailId);
+            var myModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            myModal.show();
+        }
+
+        $(function () {
+            let currentPage = 1;
+            let rowsPerPage = 10;
+            let searchTerm = '';
+            let sortColumn = '';
+            let sortDirection = 'asc';
+            let searchTimeout = null;
+
+            function loadDocuments() {
+                $.ajax({
+                    url: '@Url.Action("PendingDocuments", "Document")',
+                    type: 'GET',
+                    data: {
+                        page: currentPage,
+                        pageSize: rowsPerPage,
+                        searchTerm: searchTerm,
+                        sortColumn: sortColumn,
+                        sortDirection: sortDirection
+                    },
+                    success: function (response) {
+                        updateTable(response);
+                    },
+                    error: function () {
+                        alert('Error loading documents');
+                    }
+                });
+            }
+
+            function updateTable(response) {
+                const $tbody = $('#documentsTableBody');
+                $tbody.empty();
+
+                if (response.documents.length === 0) {
+                    $('#documentsTable').hide();
+                    $('#noDataMessage').show();
+                    $('.pagination-container').hide();
+                } else {
+                    $('#documentsTable').show();
+                    $('#noDataMessage').hide();
+                    $('.pagination-container').show();
+
+                    response.documents.forEach(function (doc) {
+                        let actionButtons = '';
+
+                        if (userRole === 'Admin' || userRole === 'Manager') {
+                            actionButtons = `
+                                <form action="/Document/ApproveDocument" method="post" style="display:inline;">
+                                    <input type="hidden" name="documentId" value="${doc.documentId}" />
+                                    <input type="hidden" name="documentDetailId" value="${doc.id}" />
+                                    <button type="submit" class="btn btn-success btn-sm" title="Approve">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                </form>
+                                <form style="display:inline;">
+                                    <button type="button" class="btn btn-danger btn-sm" title="Reject"
+                                            onclick="openRejectModal('${doc.documentId}', '${doc.id}')">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </form>
+                            `;
+                        }
+
+                        const row = `
+                            <tr>
+                                <td class="text-nowrap text-start">${doc.title}</td>
+                                <td class="text-start text-nowrap">${formatDate(doc.fileUploadedTime)}</td>
+                                <td class="text-start wide-description">${doc.description}</td>
+                                <td class="text-start text-nowrap">${doc.createdBy}</td>
+                                <td class="text-start text-nowrap">${formatDate(doc.createdOn)}</td>
+                                <td class="text-start text-nowrap">${doc.originalFileName}</td>
+                                <td class="text-center text-nowrap">${doc.versionNumber}</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        ${actionButtons}
+                                        <a href="/Document/ViewDocument?documentDetailId=${doc.id}" class="btn btn-info btn-sm" target="_blank" title="View Document">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Document/DownloadDocument?documentDetailId=${doc.id}" class="btn btn-success btn-sm" title="Download Document">
+                                            <i class="bi bi-cloud-arrow-down-fill"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        $tbody.append(row);
+                    });
+                }
+
+                updatePaginationInfo(response);
+            }
+
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = months[date.getMonth()];
+                const year = String(date.getFullYear()).slice(-2);
+                return `${day} ${month}. ${year}`;
+            }
+
+            function updatePaginationInfo(response) {
+                const startRecord = response.totalRecords === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+                const endRecord = Math.min(currentPage * rowsPerPage, response.totalRecords);
+
+                $('#startRecord').text(startRecord);
+                $('#endRecord').text(endRecord);
+                $('#totalRecords').text(response.totalRecords);
+
+                updatePaginationButtons(response.totalPages);
+            }
+
+            function updatePaginationButtons(totalPages) {
+                const $pagination = $('#paginationList');
+                $pagination.find('.page-number').remove();
+
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, currentPage + 2);
+
+                if (currentPage <= 2) endPage = Math.min(5, totalPages);
+                if (currentPage >= totalPages - 1) startPage = Math.max(1, totalPages - 4);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    const $pageItem = $(`<li class="page-item page-number ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
+                    $('#nextPage').parent().before($pageItem);
+                }
+
+                if (startPage > 2) {
+                    $('<li class="page-item disabled page-number"><a class="page-link" href="#">...</a></li>').insertBefore($('.page-number').first());
+                }
+                if (endPage < totalPages - 1) {
+                    $('<li class="page-item disabled page-number"><a class="page-link" href="#">...</a></li>').insertAfter($('.page-number').last());
+                }
+
+                $('#firstPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#prevPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#nextPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+                $('#lastPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+            }
+
+            $('#rowsPerPage').on('change', function () {
+                rowsPerPage = parseInt($(this).val()) || 10;
+                currentPage = 1;
+                loadDocuments();
+            });
+
+            $('#documentSearch').on('input', function () {
+                clearTimeout(searchTimeout);
+                searchTerm = $(this).val().trim();
+                searchTimeout = setTimeout(function () {
+                    currentPage = 1;
+                    loadDocuments();
+                }, 500);
+            });
+
+            $('.sortable').on('click', function () {
+                const col = $(this).data('col');
+
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'asc';
+                }
+
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+                currentPage = 1;
+                loadDocuments();
+            });
+
+            $(document).on('click', '#firstPage', function (e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#prevPage', function (e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#nextPage', function (e) {
+                e.preventDefault();
+                const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#lastPage', function (e) {
+                e.preventDefault();
+                const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '.pagination .page-link[data-page]', function (e) {
+                e.preventDefault();
+                const page = parseInt($(this).data('page'));
+                if (page && page !== currentPage) {
+                    currentPage = page;
+                    loadDocuments();
+                }
+            });
+
+            // Initial load
+            loadDocuments();
+        });
+    </script>
+
+    <style>
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px !important;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #007bff;
+        }
+
+        th.sortable:hover {
+            background: #e3f2fd;
+        }
+
+        th.sorted-asc .sort-indicator::after {
+            content: '▲';
+            font-size: 0.7em;
+        }
+
+        th.sorted-desc .sort-indicator::after {
+            content: '▼';
+            font-size: 0.7em;
+        }
+
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+            content: '⇅';
+            opacity: 0.5;
+        }
+
+        .pagination-container {
+            background-color: #fff;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 12px 15px;
+        }
+
+        .pagination-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .pagination .page-link {
+            color: #007bff;
+            border-radius: 0.25rem;
+            margin: 0 2px;
+            min-width: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+            .pagination .page-link:hover {
+                background-color: #e9ecef;
+                border-color: #dee2e6;
+            }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+    </style>
+}

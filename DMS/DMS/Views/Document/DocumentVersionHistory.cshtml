@@ -1,0 +1,82 @@
+﻿@model List<DMS.Models.DocumentDetailsModel>
+@using DMS.Models
+@{
+    // Group documents by DocumentId and VersionNumber
+    var grouped = new Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>>();
+
+    foreach (var doc in Model)
+    {
+        if (!grouped.ContainsKey(doc.DocumentId))
+            grouped[doc.DocumentId] = new Dictionary<int, List<DocumentDetailsModel>>();
+
+        if (!grouped[doc.DocumentId].ContainsKey(doc.VersionNumber))
+            grouped[doc.DocumentId][doc.VersionNumber] = new List<DocumentDetailsModel>();
+
+        grouped[doc.DocumentId][doc.VersionNumber].Add(doc);
+    }
+}
+
+<h5 class="mb-3 text-primary fw-semibold"><i class="bi bi-clock-history me-2"></i>Document Version History</h5>
+
+<div class="d-flex flex-column align-items-center justify-content-center py-3 bg-light rounded shadow-sm" style="font-size: 0.9rem;">
+    <h6 class="fw-bold text-primary mb-1">
+        <i class="bi bi-file-earmark-text me-2"></i> @ViewBag.title
+    </h6>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info small mt-3">No version history found.</div>
+}
+else
+{
+    <div style="font-size: 0.9rem;">
+        @foreach (var docGroup in grouped)
+        {
+            var versionNumbers = docGroup.Value.Keys.ToList();
+            versionNumbers.Sort();
+
+            foreach (var versionNumber in versionNumbers)
+            {
+                var versionFiles = docGroup.Value[versionNumber];
+                var firstFile = versionFiles[0];
+                string collapseId = $"collapse_{docGroup.Key}_{versionNumber}";
+
+                <div class="border rounded p-2 mb-2 shadow-sm">
+                    <!-- Version header -->
+                    <div class="d-flex justify-content-between align-items-center gap-2 small fw-semibold"
+                         style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                        <div class="text-muted">
+                            <span class="text-dark me-2">Version @versionNumber</span> |
+                            <span class="me-2">Uploaded: @firstFile.CreatedOn.ToString("yyyy-MM-dd HH:mm")</span> |
+                            <span>Description: @firstFile.Description</span>
+                        </div>
+                        <span class="badge bg-primary">@versionFiles.Count file(s)</span>
+                    </div>
+                </div>
+
+                <!-- Collapsible list -->
+                <div class="collapse mt-1" id="@collapseId">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var file in versionFiles)
+                        {
+                            <li class="list-group-item py-1 px-2 d-flex justify-content-between align-items-center small">
+                                <span style="max-width: 700px; word-break: break-all;">@file.OriginalFileName</span>
+                                <div class="d-flex gap-1">
+                                    <a asp-action="ViewDocument" asp-route-documentDetailId="@file.Id"
+                                       class="btn btn-info btn-sm" target="_blank" title="View Document">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="DownloadDocument" asp-route-documentDetailId="@file.Id"
+                                       class="btn btn-success btn-sm" title="Download Document">
+                                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        }
+    </div>
+}

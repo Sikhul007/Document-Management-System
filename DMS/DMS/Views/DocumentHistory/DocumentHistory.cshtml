@@ -1,0 +1,25 @@
+﻿@* @model IEnumerable<DMS_Final.Models.DocumentStatusHistoryModel>
+
+<h2>Document History</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Action</th>
+            <th>Performed By</th>
+            <th>Date</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var h in Model)
+        {
+            <tr>
+                <td>@h.ApproveStatus</td>
+                <td>@h.CreatedBy</td>
+                <td>@h.CreatedOn</td>
+                <td>@h.Notes</td>
+            </tr>
+        }
+    </tbody>
+</table> *@

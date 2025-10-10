@@ -1,0 +1,528 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var documentCount = ViewBag.DocumentDetailsCount;
+    var pendingDocumentCount = ViewBag.DocumentpendingDetailsCount;
+    var approvedDocumentCount = ViewBag.DocumentapprovedDetailsCount;
+    var activeUserCount = ViewBag.ActiveUserCount;
+    var userName = ViewBag.UserName as string;
+    var loginTime = ViewBag.LoginTime != null
+        ? DateTime.Parse(ViewBag.LoginTime.ToString()).ToString("dd MMM yyyy, hh:mm tt")
+        : "";
+
+    var unreadNotificationCount = ViewBag.UnreadNotificationCount ?? 0;
+}
+
+<style>
+    .text-xs {
+        font-size: 0.85rem !important;
+    }
+
+    .h5 {
+        font-size: 1.1rem !important;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Left side: Title + Welcome -->
+        <div>
+            <h1 class="h4 mb-0 text-primary">Admin Dashboard</h1>
+            <p class="mb-0 text-muted">Welcome back, @userName! 👋</p>
+        </div>
+
+        <!-- Right side: Date/Time + Notification -->
+        <div class="d-flex align-items-center" style="font-size:0.88rem;">
+            <!-- Date/Time -->
+            <div class="me-4 text-end" style="font-size:0.88rem;">
+                <div id="currentDate" class="fw-bold"></div>
+                @* <div id="currentTime" class="text-secondary"></div> *@
+                <div id="loginDateTime">
+                    <span class="fw-bold">Login:</span> @loginTime
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="dropdown position-relative">
+                <a href="#" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
+                    <i class="bi bi-bell text-primary" style="font-size:1.3rem;"></i>
+                    <span id="notificationCount"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger @(ViewBag.UnreadNotificationCount > 0 ? "" : "d-none")"
+                          style="transform: translate(35%, -35%) scale(0.78); font-size:0.6rem; padding:0.18rem 0.34rem;">
+                        @ViewBag.UnreadNotificationCount
+                    </span>
+                </a>
+                <ul id="notificationList"
+                    class="dropdown-menu dropdown-menu-end shadow"
+                    aria-labelledby="notificationDropdown"
+                    style="width:320px; max-height:400px; overflow-y:auto; overflow-x:hidden; font-size:0.9rem;">
+                    @if (ViewBag.RecentNotifications is List<DMS.Models.NotificationModel> notifs && notifs.Any())
+                    {
+                        foreach (var n in notifs)
+                        {
+                            <li class="dropdown-item @(n.IsRead ? "" : "fw-bold")" style="white-space:normal; word-break:break-word; font-size:0.88rem; padding:0.4rem 0.6rem;">
+                                <div style="font-size:0.88rem;">@n.Message</div>
+                                <small class="text-muted" style="font-size:0.72rem; display:block; margin-top:0.18rem;">@n.CreatedOn.ToString("g")</small>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="dropdown-item text-muted" style="white-space:normal; font-size:0.88rem;">No notifications found</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <!-- All Documents -->
+        <div class="col-xl-3 col-md-6 mb-3">
+            <a asp-controller="Document" asp-action="AllDocuments" style="text-decoration: none; color: inherit;">
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #343a40;">
+                    <div class="card-body py-2">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-dark text-uppercase mb-1" style="font-size: 0.9rem;">
+                                    All Documents
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-dark">@documentCount</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-files fs-4 text-dark"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Approved Documents -->
+        <div class="col-xl-3 col-md-6 mb-3">
+            <a asp-controller="Document" asp-action="AllDocuments" style="text-decoration: none; color: inherit;">
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #28a745;">
+                    <div class="card-body py-2">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1" style="font-size: 0.9rem;">
+                                    Approved Documents
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-success">@approvedDocumentCount</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-file-earmark-check fs-4 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Pending Review -->
+        <div class="col-xl-3 col-md-6 mb-3">
+            <a asp-controller="Document" asp-action="PendingDocuments" style="text-decoration: none; color: inherit;">
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #ffc107;">
+                    <div class="card-body py-2">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="font-size: 0.9rem;">
+                                    Pending Review
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-warning">@pendingDocumentCount</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-hourglass-split fs-4 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Total Users -->
+        <div class="col-xl-3 col-md-6 mb-3">
+            <a asp-controller="Admin" asp-action="GetAllUsers" style="text-decoration: none; color: inherit;">
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #17a2b8;">
+                    <div class="card-body py-2">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1" style="font-size: 0.9rem;">
+                                    Total Users
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-info">@activeUserCount</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people fs-4 text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Document Status Overview</h6>
+                    <div class="dropdown no-arrow">
+                        <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">View Details</a></li>
+                            <li><a class="dropdown-item" href="#">Export Data</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Refresh</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area" style="height: 300px;">
+                        <canvas id="documentStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    <div class="list-group list-group-flush">
+                        @if (ViewBag.RecentActivities is IEnumerable<(DMS.Models.DocumentStatusHistoryModel History, string Title, string OriginalFileName)> activities && activities.Any())
+                        {
+                            foreach (var act in activities)
+                            {
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <h6 class="mb-1 fw-normal" style="font-size: 0.9rem;">
+                                            @act.History.Notes
+                                        </h6>
+                                        <small class="text-muted text-nowrap ms-2" style="font-size: 0.75rem;">@act.History.CreatedOn.ToString("g")</small>
+                                    </div>
+                                    <p class="mb-1 text-truncate" style="font-size: 0.8rem;">
+                                        <span class="fw-bold">@act.History.CreatedBy</span> - Status:
+                                        <span class="badge @(
+                                              act.History.ApproveStatus.ToLower() == "approved" ? "bg-success" :
+                                              act.History.ApproveStatus.ToLower() == "pending" ? "bg-warning text-dark" :
+                                              act.History.ApproveStatus.ToLower() == "rejected" ? "bg-danger" :
+                                              "bg-secondary"
+                                                                                                                                                                                )">
+                                    @act.History.ApproveStatus
+                                </span>
+                                <br /> Title: <span class="text-primary">@act.Title</span>
+                                <br /> File: <span class="text-info">@act.OriginalFileName</span>
+                            </p>
+                        </div>
+                                                }
+                        }
+                        else
+                        {
+                            <div class="list-group-item text-muted">No recent activities found.</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New User-based Document Status Chart -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">User Document Status Overview</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area" style="height: 400px;">
+                        <canvas id="userDocumentStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Recent Documents</h6>
+            <div class="d-flex">
+                <a asp-action="UploadDocument" asp-controller="Document" class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i> New Document
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Uploaded By</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.RecentDocuments is List<DMS.Models.DocumentDetailsModel> recentDocs && recentDocs.Any())
+                        {
+                            foreach (var doc in recentDocs)
+                            {
+                                <tr>
+                                    <td style="max-width: 250px; word-break: break-all; white-space: normal;">
+                                        @doc.OriginalFileName
+                                    </td>
+                                    <td>@doc.CreatedBy</td>
+                                    <td>@doc.CreatedOn.ToString("dd MMM. yy")</td>
+                                    <td>
+                                        @if (doc.ApproveStatus == "approved")
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else if (doc.ApproveStatus == "pending")
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                        else if (doc.ApproveStatus == "rejected")
+                                        {
+                                            <span class="badge bg-danger">Rejected</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@doc.ApproveStatus</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No recent documents found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* C# for Chart Data *@
+@{
+    var monthlyPending = ViewBag.MonthlyPending as List<(int Year, int Month, int Count)>;
+    var monthlyApproved = ViewBag.MonthlyApproved as List<(int Year, int Month, int Count)>;
+    var monthlyRejected = ViewBag.MonthlyRejected as List<(int Year, int Month, int Count)>;
+
+    // Get all months present in any dataset
+    var months = monthlyPending?.Select(x => (x.Year, x.Month))
+        .Union(monthlyApproved?.Select(x => (x.Year, x.Month)) ?? Enumerable.Empty<(int, int)>())
+        .Union(monthlyRejected?.Select(x => (x.Year, x.Month)) ?? Enumerable.Empty<(int, int)>())
+        .Distinct()
+        .OrderBy(x => x.Year).ThenBy(x => x.Month)
+        .ToList() ?? new List<(int, int)>();
+
+    var monthLabels = months.Select(m => $"{System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(m.Month)} {m.Year}").ToList();
+    var pendingData = months.Select(m => monthlyPending?.FirstOrDefault(x => x.Year == m.Year && x.Month == m.Month).Count ?? 0).ToList();
+    var approvedData = months.Select(m => monthlyApproved?.FirstOrDefault(x => x.Year == m.Year && x.Month == m.Month).Count ?? 0).ToList();
+    var rejectedData = months.Select(m => monthlyRejected?.FirstOrDefault(x => x.Year == m.Year && x.Month == m.Month).Count ?? 0).ToList();
+
+    // ✅ Use ViewBag data instead of hardcoded list
+    var userDocumentStats = ViewBag.UserDocumentStats as List<(string UserName, int Uploaded, int Pending, int Rejected)>
+                            ?? new List<(string, int, int, int)>();
+
+    var userNames = userDocumentStats.Select(u => u.UserName).ToList();
+    var uploadedCounts = userDocumentStats.Select(u => u.Uploaded).ToList();
+    var userPendingCounts = userDocumentStats.Select(u => u.Pending).ToList();
+    var userRejectedCounts = userDocumentStats.Select(u => u.Rejected).ToList();
+
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart data setup
+        const monthLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(monthLabels));
+        const approvedData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(approvedData));
+        const pendingData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(pendingData));
+        const rejectedData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(rejectedData));
+
+        const ctx = document.getElementById('documentStatusChart').getContext('2d');
+        const documentStatusChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: monthLabels,
+                datasets: [
+                    {
+                        label: 'Approved',
+                        data: approvedData,
+                        backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Pending',
+                        data: pendingData,
+                        backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                        borderColor: 'rgba(255, 193, 7, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Rejected',
+                        data: rejectedData,
+                        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Documents'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false,
+                        text: 'Document Status by Month'
+                    }
+                }
+            }
+        });
+
+        // User Document Status Chart
+        const userNames = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(userNames));
+        const uploadedCounts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(uploadedCounts));
+        const userPendingCounts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(userPendingCounts));
+        const userRejectedCounts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(userRejectedCounts));
+
+        const userCtx = document.getElementById('userDocumentStatusChart').getContext('2d');
+        const userDocumentStatusChart = new Chart(userCtx, {
+            type: 'bar',
+            data: {
+                labels: userNames,
+                datasets: [
+                    {
+                        label: 'Uploaded',
+                        data: uploadedCounts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Pending',
+                        data: userPendingCounts,
+                        backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                        borderColor: 'rgba(255, 193, 7, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Rejected',
+                        data: userRejectedCounts,
+                        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Documents'
+                        },
+                        stacked: false
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Users'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Document Status by User'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            }
+        });
+
+        // Date and Time update function
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' }; // Added seconds for current time
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString(undefined, dateOptions);
+            // Updated to display current time correctly
+            const currentTimeElement = document.getElementById('currentTime');
+            if (currentTimeElement) {
+                currentTimeElement.textContent = 'Current Time: ' + now.toLocaleTimeString(undefined, timeOptions);
+            }
+        }
+
+        updateDateTime();
+        setInterval(updateDateTime, 1000); // Update every second for time
+    </script>
+    <script>
+        // Notification AJAX call
+        $(document).ready(function () {
+            $('#notificationDropdown').on('show.bs.dropdown', function () { // Use 'show.bs.dropdown' to trigger on opening
+                $.get('/Notification/GetUserNotifications', function (data) {
+                    let list = $('#notificationList');
+                    list.empty();
+
+                    if (data.length === 0) {
+                        list.append('<li class="dropdown-item text-muted" style="white-space: normal;">No notifications found</li>');
+                    } else {
+                        data.forEach(n => {
+                            // Correctly format the date string from the server to local date/time
+                            const createdOn = new Date(n.createdOn);
+                            const formattedTime = createdOn.toLocaleDateString() + ' ' + createdOn.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                            list.append(`
+                                <li class="dropdown-item ${n.isRead ? '' : 'fw-bold'}" style="white-space: normal; word-break: break-word;">
+                                    <div style="font-size: 0.8rem;">${n.message}</div>
+                                    <small class="text-muted">${formattedTime}</small>
+                                </li>
+                            `);
+                        });
+                    }
+
+                    // Mark as read in backend and clear the badge after fetching
+                    $.post('/Notification/MarkNotificationsAsRead', function () {
+                        $('#notificationCount').addClass('d-none').text('');
+                    });
+                });
+            });
+        });
+    </script>
+}

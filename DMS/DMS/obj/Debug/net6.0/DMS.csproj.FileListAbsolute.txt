@@ -1,0 +1,123 @@
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.csproj.AssemblyReference.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\rpswa.dswa.cache.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.GeneratedMSBuildEditorConfig.editorconfig
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.AssemblyInfoInputs.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.AssemblyInfo.cs
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.csproj.CoreCompileInputs.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.MvcApplicationPartsAssemblyInfo.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.RazorAssemblyInfo.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.RazorAssemblyInfo.cs
+D:\V6\DMS\DMS\bin\Debug\net6.0\appsettings.Development.json
+D:\V6\DMS\DMS\bin\Debug\net6.0\appsettings.json
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.staticwebassets.runtime.json
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.staticwebassets.endpoints.json
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.exe
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.deps.json
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.runtimeconfig.json
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.dll
+D:\V6\DMS\DMS\bin\Debug\net6.0\DMS.pdb
+D:\V6\DMS\DMS\bin\Debug\net6.0\System.Data.SqlClient.dll
+D:\V6\DMS\DMS\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+D:\V6\DMS\DMS\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+D:\V6\DMS\DMS\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+D:\V6\DMS\DMS\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Data.SqlClient.dll
+D:\V6\DMS\DMS\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Data.SqlClient.dll
+D:\V6\DMS\DMS\obj\Debug\net6.0\rjimswa.dswa.cache.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\rjsmrazor.dswa.cache.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\rjsmcshtml.dswa.cache.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\V6\DMS\DMS\obj\Debug\net6.0\scopedcss\bundle\DMS.styles.css
+D:\V6\DMS\DMS\obj\Debug\net6.0\scopedcss\projectbundle\DMS.bundle.scp.css
+D:\V6\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.json.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\staticwebassets.development.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.endpoints.json
+D:\V6\DMS\DMS\obj\Debug\net6.0\staticwebassets.upToDateCheck.txt
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.csproj.Up2Date
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.dll
+D:\V6\DMS\DMS\obj\Debug\net6.0\refint\DMS.dll
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.pdb
+D:\V6\DMS\DMS\obj\Debug\net6.0\DMS.genruntimeconfig.cache
+D:\V6\DMS\DMS\obj\Debug\net6.0\ref\DMS.dll
+D:\DMS\DMS\bin\Debug\net6.0\appsettings.Development.json
+D:\DMS\DMS\bin\Debug\net6.0\appsettings.json
+D:\DMS\DMS\bin\Debug\net6.0\DMS.staticwebassets.endpoints.json
+D:\DMS\DMS\bin\Debug\net6.0\DMS.staticwebassets.runtime.json
+D:\DMS\DMS\bin\Debug\net6.0\DMS.exe
+D:\DMS\DMS\bin\Debug\net6.0\DMS.deps.json
+D:\DMS\DMS\bin\Debug\net6.0\DMS.runtimeconfig.json
+D:\DMS\DMS\bin\Debug\net6.0\DMS.dll
+D:\DMS\DMS\bin\Debug\net6.0\DMS.pdb
+D:\DMS\DMS\bin\Debug\net6.0\System.Data.SqlClient.dll
+D:\DMS\DMS\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+D:\DMS\DMS\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+D:\DMS\DMS\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+D:\DMS\DMS\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Data.SqlClient.dll
+D:\DMS\DMS\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Data.SqlClient.dll
+D:\DMS\DMS\obj\Debug\net6.0\DMS.csproj.AssemblyReference.cache
+D:\DMS\DMS\obj\Debug\net6.0\rpswa.dswa.cache.json
+D:\DMS\DMS\obj\Debug\net6.0\DMS.GeneratedMSBuildEditorConfig.editorconfig
+D:\DMS\DMS\obj\Debug\net6.0\DMS.AssemblyInfoInputs.cache
+D:\DMS\DMS\obj\Debug\net6.0\DMS.AssemblyInfo.cs
+D:\DMS\DMS\obj\Debug\net6.0\DMS.csproj.CoreCompileInputs.cache
+D:\DMS\DMS\obj\Debug\net6.0\DMS.MvcApplicationPartsAssemblyInfo.cache
+D:\DMS\DMS\obj\Debug\net6.0\DMS.RazorAssemblyInfo.cache
+D:\DMS\DMS\obj\Debug\net6.0\DMS.RazorAssemblyInfo.cs
+D:\DMS\DMS\obj\Debug\net6.0\rjimswa.dswa.cache.json
+D:\DMS\DMS\obj\Debug\net6.0\rjsmrazor.dswa.cache.json
+D:\DMS\DMS\obj\Debug\net6.0\rjsmcshtml.dswa.cache.json
+D:\DMS\DMS\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\DMS\DMS\obj\Debug\net6.0\scopedcss\bundle\DMS.styles.css
+D:\DMS\DMS\obj\Debug\net6.0\scopedcss\projectbundle\DMS.bundle.scp.css
+D:\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.json
+D:\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.json.cache
+D:\DMS\DMS\obj\Debug\net6.0\staticwebassets.development.json
+D:\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.endpoints.json
+D:\DMS\DMS\obj\Debug\net6.0\staticwebassets.upToDateCheck.txt
+D:\DMS\DMS\obj\Debug\net6.0\DMS.csproj.Up2Date
+D:\DMS\DMS\obj\Debug\net6.0\DMS.dll
+D:\DMS\DMS\obj\Debug\net6.0\refint\DMS.dll
+D:\DMS\DMS\obj\Debug\net6.0\DMS.pdb
+D:\DMS\DMS\obj\Debug\net6.0\DMS.genruntimeconfig.cache
+D:\DMS\DMS\obj\Debug\net6.0\ref\DMS.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\appsettings.Development.json
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\appsettings.json
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.staticwebassets.runtime.json
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.staticwebassets.endpoints.json
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.exe
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.deps.json
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.runtimeconfig.json
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\DMS.pdb
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\System.Data.SqlClient.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Data.SqlClient.dll
+D:\Alomgir Bhai\DMS\DMS\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Data.SqlClient.dll
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.csproj.AssemblyReference.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\rpswa.dswa.cache.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.GeneratedMSBuildEditorConfig.editorconfig
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.AssemblyInfoInputs.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.AssemblyInfo.cs
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.csproj.CoreCompileInputs.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.MvcApplicationPartsAssemblyInfo.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.RazorAssemblyInfo.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.RazorAssemblyInfo.cs
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\rjimswa.dswa.cache.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\rjsmrazor.dswa.cache.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\rjsmcshtml.dswa.cache.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\scopedcss\bundle\DMS.styles.css
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\scopedcss\projectbundle\DMS.bundle.scp.css
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.json.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\staticwebassets.development.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\staticwebassets.build.endpoints.json
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\staticwebassets.upToDateCheck.txt
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.csproj.Up2Date
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.dll
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\refint\DMS.dll
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.pdb
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\DMS.genruntimeconfig.cache
+D:\Alomgir Bhai\DMS\DMS\obj\Debug\net6.0\ref\DMS.dll

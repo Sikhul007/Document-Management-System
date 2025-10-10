@@ -1,0 +1,306 @@
+﻿@model List<DMS.Models.DocumentModel>
+@{
+    ViewBag.Title = "My Documents";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3 px-2 py-2 bg-light rounded shadow-sm">
+    <h2 class="fw-semibold text-primary mb-0" style="font-size:1.4rem;">
+        <i class="bi bi-folder2-open me-2"></i> My Documents
+    </h2>
+    <a asp-action="UploadDocument" asp-controller="Document" class="btn btn-success btn-sm d-flex align-items-center gap-1">
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>New</span>
+    </a>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-2 small">
+    <div class="d-flex align-items-center">
+        <span class="me-1">Show</span>
+        <select id="rowsPerPage" class="form-select form-select-sm" style="width:auto;">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        <span class="ms-1">entries</span>
+    </div>
+    <div style="position: relative; width: 220px;">
+        <input type="text"
+               id="documentSearch"
+               class="form-control form-control-sm ps-5"
+               placeholder="Search..."
+               autocomplete="off"
+               style="border-radius: 20px;">
+        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #888; font-size:0.9rem;">
+            <i class="bi bi-search"></i>
+        </span>
+    </div>
+</div>
+
+<div id="noDataMessage" class="alert alert-info small" role="alert" style="display:none;">
+    You have not uploaded any documents yet.
+</div>
+
+<div id="tableContainer">
+    <div class="table-responsive" style="overflow-x: auto;">
+        <table id="documentsTable" class="table table-sm table-hover table-bordered table-striped shadow-sm">
+            <thead class="table-primary small">
+                <tr>
+                    <th class="text-start text-nowrap sortable" style="width:20%;" data-col="Title">Title <span class="sort-indicator"></span></th>
+                    <th class="text-start text-nowrap sortable" style="width:65%;" data-col="Description">Description <span class="sort-indicator"></span></th>
+                    <th class="text-start text-nowrap" style="width:15%;">Action</th>
+                </tr>
+            </thead>
+            <tbody class="small" id="documentsTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-container bg-white border rounded shadow-sm py-2 px-3 mt-2 small">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="pagination-info">
+                Showing <span id="startRecord">0</span> to <span id="endRecord">0</span> of <span id="totalRecords">0</span> entries
+            </div>
+            <nav aria-label="Document pagination">
+                <ul class="pagination pagination-sm mb-0" id="paginationList">
+                    <li class="page-item"><a class="page-link" href="#" id="firstPage" title="First Page">First</a></li>
+                    <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="#" id="lastPage" title="Last Page">Last</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px !important;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #007bff;
+        }
+
+        th.sortable:hover {
+            background: #e3f2fd;
+        }
+
+        th.sorted-asc .sort-indicator::after {
+            content: '▲';
+            font-size: 0.7em;
+        }
+
+        th.sorted-desc .sort-indicator::after {
+            content: '▼';
+            font-size: 0.7em;
+        }
+
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+            content: '⇅';
+            opacity: 0.5;
+        }
+
+        .pagination-info {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            let currentPage = 1;
+            let rowsPerPage = 10;
+            let searchTerm = '';
+            let sortColumn = '';
+            let sortDirection = 'asc';
+            let searchTimeout = null;
+
+            function loadDocuments() {
+                $.ajax({
+                    url: '@Url.Action("MyDocuments", "Document")',
+                    type: 'GET',
+                    data: {
+                        page: currentPage,
+                        pageSize: rowsPerPage,
+                        searchTerm: searchTerm,
+                        sortColumn: sortColumn,
+                        sortDirection: sortDirection
+                    },
+                    success: function (response) {
+                        updateTable(response);
+                    },
+                    error: function () {
+                        alert('Error loading documents');
+                    }
+                });
+            }
+
+            function updateTable(response) {
+                const $tbody = $('#documentsTableBody');
+                $tbody.empty();
+
+                if (response.documents.length === 0) {
+                    $('#tableContainer').hide();
+                    $('#noDataMessage').show();
+                } else {
+                    $('#tableContainer').show();
+                    $('#noDataMessage').hide();
+
+                    response.documents.forEach(function (doc) {
+                        const row = `
+                            <tr>
+                                <td class="text-start text-nowrap">${doc.title}</td>
+                                <td class="text-start">${doc.description || ''}</td>
+                                <td class="text-center text-nowrap">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a href="/Document/EditDocument?documentId=${doc.id}" class="btn btn-info btn-sm" title="Quick Edit">
+                                            <i class="bi bi-file-earmark-text-fill"></i>
+                                        </a>
+                                        <a href="/Document/EditDocumentFull?documentId=${doc.id}" class="btn btn-secondary btn-sm" title="Full Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="/Document/DocumentVersionHistory?documentId=${doc.id}" class="btn btn-warning btn-sm" title="Version History">
+                                            <i class="bi bi-clock-history"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        $tbody.append(row);
+                    });
+                }
+
+                updatePaginationInfo(response);
+            }
+
+            function updatePaginationInfo(response) {
+                const startRecord = response.totalRecords === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+                const endRecord = Math.min(currentPage * rowsPerPage, response.totalRecords);
+
+                $('#startRecord').text(startRecord);
+                $('#endRecord').text(endRecord);
+                $('#totalRecords').text(response.totalRecords);
+
+                updatePaginationButtons(response.totalPages);
+            }
+
+            function updatePaginationButtons(totalPages) {
+                const $pagination = $('#paginationList');
+                $pagination.find('.page-number').remove();
+
+                let startPage = Math.max(1, currentPage - 1);
+                let endPage = Math.min(totalPages, currentPage + 1);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    const $pageItem = $(`<li class="page-item page-number ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
+                    $('#nextPage').parent().before($pageItem);
+                }
+
+                if (startPage > 2) {
+                    $('<li class="page-item disabled page-number"><a class="page-link" href="#">...</a></li>').insertBefore($('.page-number').first());
+                }
+                if (endPage < totalPages - 1) {
+                    $('<li class="page-item disabled page-number"><a class="page-link" href="#">...</a></li>').insertAfter($('.page-number').last());
+                }
+
+                $('#firstPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#prevPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#nextPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+                $('#lastPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+            }
+
+            $('#rowsPerPage').on('change', function () {
+                rowsPerPage = parseInt($(this).val()) || 10;
+                currentPage = 1;
+                loadDocuments();
+            });
+
+            $('#documentSearch').on('input', function () {
+                clearTimeout(searchTimeout);
+                searchTerm = $(this).val().trim();
+                searchTimeout = setTimeout(function () {
+                    currentPage = 1;
+                    loadDocuments();
+                }, 500);
+            });
+
+            $('.sortable').on('click', function () {
+                const col = $(this).data('col');
+
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'asc';
+                }
+
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+                currentPage = 1;
+                loadDocuments();
+            });
+
+            $(document).on('click', '#firstPage', function (e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#prevPage', function (e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#nextPage', function (e) {
+                e.preventDefault();
+                const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#lastPage', function (e) {
+                e.preventDefault();
+                const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '.pagination .page-link[data-page]', function (e) {
+                e.preventDefault();
+                const page = parseInt($(this).data('page'));
+                if (page && page !== currentPage) {
+                    currentPage = page;
+                    loadDocuments();
+                }
+            });
+
+            // Initial load
+            loadDocuments();
+        });
+    </script>
+}

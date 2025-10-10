@@ -1,0 +1,189 @@
+﻿@model IEnumerable<DMS.Models.DocumentDetailsModel>
+@{
+    var doc = ViewBag.Document as DMS.Models.DocumentModel;
+    var allTags = ViewBag.AllTags as List<DMS.Models.TagModel>;
+}
+
+<h3 class="fw-bold text-primary mb-2">Document Details: @doc?.Title</h3>
+<div class="mb-3 small">
+    <span><strong>Description:</strong> @doc?.Description</span><br />
+    <span><strong>Created By:</strong> @doc?.CreatedBy</span> </br>
+    <span><strong>Created On:</strong> @doc?.CreatedOn.ToString("yyyy-MM-dd")</span>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+    <form method="get" asp-action="ShowDocumentDetails" asp-controller="Document" id="filterForm" class="d-flex gap-2 flex-wrap">
+        <input type="hidden" name="id" value="@doc?.Id" />
+        <select name="tag" class="form-select form-select-sm" onchange="document.getElementById('filterForm').submit();" style="min-width:150px;">
+            <option value="">Search By Tags</option>
+            @if (allTags != null)
+            {
+                foreach (var tag in allTags)
+                {
+                    var isSelected = ViewContext.HttpContext.Request.Query["tag"] == tag.Name;
+                    <option value="@tag.Name" selected="@(isSelected ? "selected" : null)">@tag.Name</option>
+                }
+            }
+        </select>
+    </form>
+
+    <div style="position: relative; width: 220px;">
+        <input type="text"
+               id="documentSearch"
+               class="form-control form-control-sm ps-4"
+               placeholder="Search..."
+               autocomplete="off"
+               style="border-radius: 15px; font-size:0.85rem;">
+        <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #888; font-size:0.9rem;">
+            <i class="bi bi-search"><span> </span></i>
+        </span>
+    </div>
+</div>
+
+<div class="table-responsive" style="max-height: 550px; overflow-y:auto;">
+    <table id="documentsTable" class="table table-bordered table-striped table-sm text-center align-middle mb-0" style="font-size:0.85rem;">
+        <thead class="table-primary">
+            <tr>
+                <th class="text-start text-nowrap sortable" data-col="0" data-type="text">File Name <span class="sort-indicator"></span></th>
+                <th class="text-center text-nowrap sortable" data-col="1" data-type="text">Version <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="2" data-type="text">Description <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="3" data-type="text">Created By <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="4" data-type="text">Tags <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="5" data-type="text">Status <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detail in Model)
+            {
+                <tr data-filename="@detail.OriginalFileName.ToLower()"
+                    data-version="@detail.VersionNumber.ToString().ToLower()"
+                    data-description="@detail.Description?.ToLower()"
+                    data-createdby="@detail.CreatedBy?.ToLower()"
+                    data-tags="@string.Join(" ", detail.Tags).ToLower()"
+                    data-status="@detail.ApproveStatus.ToLower()">
+                    <td class="text-start" style="max-width:200px; word-break:break-word; white-space:normal;" data-sort-value="@detail.OriginalFileName.ToLower()">
+                        @detail.OriginalFileName
+                    </td>
+                    <td class="text-center text-nowrap" data-sort-value="@detail.VersionNumber.ToString()">@detail.VersionNumber</td>
+                    <td class="text-start" data-sort-value="@detail.Description?.ToLower()">@detail.Description</td>
+                    <td class="text-start text-nowrap" data-sort-value="@detail.CreatedBy?.ToLower()">@detail.CreatedBy</td>
+                    <td class="text-start" data-sort-value="@string.Join(" ", detail.Tags).ToLower()">
+                        @foreach (var tag in detail.Tags)
+                        {
+                            <span class="badge bg-info text-dark me-1" style="font-size:0.75rem;">@tag</span>
+                        }
+                    </td>
+                    <td class="text-start text-nowrap" data-sort-value="@detail.ApproveStatus.ToLower()">
+                        @if (detail.ApproveStatus == "approve")
+                        {
+                            <span class="badge bg-success" style="font-size:0.75rem;">Approved</span>
+                        }
+                        else if (detail.ApproveStatus == "pending")
+                        {
+                            <span class="badge bg-warning text-dark" style="font-size:0.75rem;">Pending</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary" style="font-size:0.75rem;">@detail.ApproveStatus</span>
+                        }
+                    </td>
+                    <td class="text-nowrap">
+                        <a asp-action="ViewDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-info btn-sm p-1 px-2" target="_blank" title="View Document">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a asp-action="DownloadDocument" asp-route-documentDetailId="@detail.Id" class="btn btn-success btn-sm p-1 px-2" title="Download Document">
+                            <i class="bi bi-cloud-arrow-down-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 20px !important;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7em;
+            color: #007bff;
+        }
+
+        th.sortable:hover {
+            background: #e3f2fd;
+        }
+
+        th.sorted-asc .sort-indicator::after {
+            content: '▲';
+        }
+
+        th.sorted-desc .sort-indicator::after {
+            content: '▼';
+        }
+
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+            content: '⇅';
+            opacity: 0.5;
+        }
+    </style>
+    <script>
+        $(function () {
+            // Real-time search
+            $('#documentSearch').on('input', function () {
+                var search = $(this).val().toLowerCase();
+                $('#documentsTable tbody tr').each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(search));
+                });
+            });
+
+            // Sorting logic
+            let lastSortedCol = null;
+            let asc = true;
+
+            $('.sortable').on('click', function () {
+                var col = $(this).data('col');
+                var colType = $(this).data('type');
+                var rows = $('#documentsTable tbody tr').get();
+
+                asc = lastSortedCol === col ? !asc : true;
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(asc ? 'sorted-asc' : 'sorted-desc');
+
+                rows.sort(function (a, b) {
+                    var valA = $(a).find('td').eq(col).data('sort-value') || $(a).find('td').eq(col).text();
+                    var valB = $(b).find('td').eq(col).data('sort-value') || $(b).find('td').eq(col).text();
+
+                    if (colType === 'date') {
+                        var dateA = new Date(valA), dateB = new Date(valB);
+                        if (!isNaN(dateA) && !isNaN(dateB)) return asc ? dateA - dateB : dateB - dateA;
+                    } else {
+                        valA = valA.toString().toLowerCase();
+                        valB = valB.toString().toLowerCase();
+                        if (valA < valB) return asc ? -1 : 1;
+                        if (valA > valB) return asc ? 1 : -1;
+                        return 0;
+                    }
+                });
+
+                $.each(rows, function (index, row) {
+                    $('#documentsTable tbody').append(row);
+                });
+
+                lastSortedCol = col;
+            });
+        });
+    </script>
+}

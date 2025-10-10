@@ -1,0 +1,256 @@
+﻿@{
+    ViewBag.Title = "Developer Dashboard";
+    var approvedDocuments = ViewBag.DocumentapprovedDetailsCountUser;
+    var pendingDocuments = ViewBag.DocumentPendingDetailsCountUser;
+    var rejectedDocuments = ViewBag.DocumentRejectedDetailsCountUser;
+
+    var unreadNotificationCount = ViewBag.UnreadNotificationCount ?? 0;
+
+    var loginTime = ViewBag.LoginTime != null
+        ? DateTime.Parse(ViewBag.LoginTime.ToString()).ToString("dd MMM yyyy, hh:mm tt")
+        : "";
+}
+
+<div class="container-fluid">
+    @* Changed mb-4 to mb-2 for tighter header spacing and h1 to h4 *@
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+            <h4 class="mb-0 text-gray-800">Developer Dashboard</h4> @* h1 changed to h4 *@
+            <p class="mb-0 text-muted small">Welcome back, @Context.Session.GetString("UserName")! 👋</p> @* Added 'small' class *@
+        </div>
+
+        <div class="d-flex align-items-center">
+            <div class="me-3 text-end small">
+                @* Added 'small' class *@
+                <div id="currentDate" class="fw-bold"></div>
+                <div id="loginDateTime">
+                    <span class="fw-bold">Login:</span> @loginTime
+                </div>
+            </div>
+
+            <div class="position-relative dropdown">
+                <a href="#" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none;">
+                    @* Reduced fs-4 to fs-5 for a smaller icon *@
+                    <i class="bi bi-bell fs-5 text-primary"></i>
+                    <span id="notificationCount"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger @(unreadNotificationCount > 0 ? "" : "d-none")">
+                        @unreadNotificationCount
+                    </span>
+                </a>
+                <ul id="notificationList"
+                    class="dropdown-menu dropdown-menu-end shadow"
+                    aria-labelledby="notificationDropdown"
+                    style="width: 300px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                    @* Reduced width for a narrower dropdown *@
+                    @if (ViewBag.RecentNotifications is List<DMS.Models.NotificationModel> notifs && notifs.Any())
+                    {
+                        foreach (var n in notifs)
+                        {
+                            <li class="dropdown-item @(n.IsRead ? "" : "fw-bold")" style="white-space: normal; word-break: break-word;">
+                                <div style="font-size: 0.8rem;">@n.Message</div> @* Reduced font size further *@
+                                <small class="text-muted">@n.CreatedOn.ToString("g")</small>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="dropdown-item text-muted" style="white-space: normal;">No notifications found</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    @* Tighter card row spacing *@
+    <div class="row mb-3">
+        <div class="col-xl-3 col-md-6 mb-3">
+            @* Reduced mb-4 to mb-3 *@
+            <a asp-controller="Document" asp-action="UploadDocument" style="text-decoration: none; color: inherit;">
+                @* Removed py-2 for less vertical padding *@
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #007bff; background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);">
+                    <div class="card-body py-2">
+                        @* Reduced card-body padding *@
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 small">Upload Document</div> @* Added small *@
+                                <div class="h6 mb-0 font-weight-bold text-primary">New</div> @* h5 changed to h6 *@
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cloud-upload fs-4 text-primary"></i> @* fs-2 reduced to fs-4 *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            @* Reduced mb-4 to mb-3 *@
+            <a asp-controller="Document" asp-action="MyDocuments" style="text-decoration: none; color: inherit;">
+                @* Removed py-2 for less vertical padding *@
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #28a745;">
+                    <div class="card-body py-2">
+                        @* Reduced card-body padding *@
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1 small">Approved Documents</div> @* Added small *@
+                                <div class="h6 mb-0 font-weight-bold text-success">@approvedDocuments</div> @* h5 changed to h6 *@
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-file-earmark-check fs-4 text-success"></i> @* fs-2 reduced to fs-4 *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            @* Reduced mb-4 to mb-3 *@
+            <a asp-controller="Document" asp-action="PendingDocuments" style="text-decoration: none; color: inherit;">
+                @* Removed py-2 for less vertical padding *@
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #ffc107;">
+                    <div class="card-body py-2">
+                        @* Reduced card-body padding *@
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1 small">Pending Review</div> @* Added small *@
+                                <div class="h6 mb-0 font-weight-bold text-warning">@pendingDocuments</div> @* h5 changed to h6 *@
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-hourglass-split fs-4 text-warning"></i> @* fs-2 reduced to fs-4 *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            @* Reduced mb-4 to mb-3 *@
+            <a asp-controller="Document" asp-action="DetailsWithNotes" style="text-decoration: none; color: inherit;">
+                @* Removed py-2 for less vertical padding *@
+                <div class="card shadow h-100" style="border-left: 0.25rem solid #dc3545;">
+                    <div class="card-body py-2">
+                        @* Reduced card-body padding *@
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1 small">Rejected Documents</div> @* Added small *@
+                                <div class="h6 mb-0 font-weight-bold text-danger">@rejectedDocuments</div> @* h5 changed to h6 *@
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-file-earmark-x fs-4 text-danger"></i> @* fs-2 reduced to fs-4 *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+            @* Reduced py-3 to py-2 *@
+            <h6 class="m-0 font-weight-bold text-primary">Recent Documents</h6> @* Reduced font size for header *@
+            <div class="d-flex">
+                <a asp-action="UploadDocument" asp-controller="Document" class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus-circle me-1 small"></i> New Document
+                </a>
+            </div>
+        </div>
+        <div class="card-body py-2">
+            @* Reduced card-body padding *@
+            <div class="table-responsive">
+                @* Added 'small' class to the table to reduce font size *@
+                <table class="table table-bordered small" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.RecentDocumentsUser != null)
+                        {
+                            foreach (var document in ViewBag.RecentDocumentsUser)
+                            {
+                                <tr>
+                                    <td>@document.OriginalFileName</td>
+                                    <td>@document.CreatedOn.ToString("dd MMM. yy")</td>
+                                    <td>
+                                        @if (document.ApproveStatus.ToLower() == "approved")
+                                        {
+                                            @* Used <small> inside badge for smaller text *@
+                                            <span class="badge bg-success"><small>@document.ApproveStatus</small></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning"><small>@document.ApproveStatus</small></span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No documents found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString(undefined, dateOptions);
+            // NOTE: The original HTML had an element with id="currentTime" but no time was being displayed, only date.
+            // I'll keep the JS logic as is, but it appears the time is not visible in the HTML structure.
+            // document.getElementById('currentTime').textContent = now.toLocaleTimeString(undefined, timeOptions);
+        }
+
+        updateDateTime();
+        setInterval(updateDateTime, 60000); // Update every minute
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#notificationDropdown').on('click', function () {
+                $.get('/Notification/GetUserNotifications', function (data) {
+                    let list = $('#notificationList');
+                    list.empty();
+
+                    if (data.length === 0) {
+                        list.append('<li class="dropdown-item text-muted" style="white-space: normal;">No notifications found</li>');
+                    } else {
+                        data.forEach(n => {
+                            list.append(`
+                                <li class="dropdown-item ${n.isRead ? '' : 'fw-bold'}" style="white-space: normal; word-break: break-word;">
+                                    <div style="font-size: 0.8rem;">${n.message}</div>
+                                    <small class="text-muted">${new Date(n.createdOn).toLocaleString()}</small>
+                                </li>
+                            `);
+                        });
+                    }
+
+                    // Mark as read in backend
+                    $.post('/Notification/MarkNotificationsAsRead', function () {
+                        // Clear the badge immediately in frontend
+                        $('#notificationCount').addClass('d-none').text('');
+                    });
+                });
+            });
+        });
+    </script>
+}

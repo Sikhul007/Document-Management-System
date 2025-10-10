@@ -1,0 +1,356 @@
+﻿@model IEnumerable<DMS.Models.DocumentModel>
+
+<style>
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        padding-right: 25px !important;
+    }
+
+    .sort-indicator {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8em;
+        color: #007bff;
+    }
+
+    th.sortable:hover {
+        background: #e3f2fd;
+    }
+
+    th.sorted-asc .sort-indicator::after {
+        content: '▲';
+        font-size: 0.7em;
+    }
+
+    th.sorted-desc .sort-indicator::after {
+        content: '▼';
+        font-size: 0.7em;
+    }
+
+    th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+        content: '⇅';
+        opacity: 0.5;
+    }
+
+    #documentsTable thead th {
+        white-space: nowrap;
+    }
+
+    .pagination-container {
+        background-color: #fff;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 12px 15px;
+    }
+
+    .pagination-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .pagination {
+        margin-bottom: 0;
+    }
+
+        .pagination .page-link {
+            color: #007bff;
+            border-radius: 0.25rem;
+            margin: 0 2px;
+            min-width: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+            .pagination .page-link:hover {
+                background-color: #e9ecef;
+                border-color: #dee2e6;
+            }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4 px-2 py-1 bg-light rounded shadow-sm">
+    <h4 class="fw-bold text-primary mb-0">
+        <i class="bi bi-folder2-open me-2"></i> All Documents
+    </h4>
+    <a asp-action="UploadDocument" asp-controller="Document" class="btn btn-success btn-sm d-flex align-items-center gap-2">
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>New</span>
+    </a>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center small">
+        <span class="me-2">Show</span>
+        <select id="rowsPerPage" class="form-select form-select-sm" style="width: auto;">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        <span class="ms-2">entries</span>
+    </div>
+    <div style="position: relative; width: 250px;">
+        <input type="text"
+               id="documentSearch"
+               class="form-control form-control-sm ps-5"
+               placeholder="Search..."
+               autocomplete="off"
+               style="border-radius: 20px;">
+        <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;">
+            <i class="bi bi-search"></i>
+        </span>
+    </div>
+</div>
+
+<div class="table-responsive" style="overflow-x: auto;">
+    <table id="documentsTable" class="table table-hover table-bordered table-striped text-center align-middle mb-0 small"
+           style="table-layout:fixed; width:100%;">
+        <thead class="table-primary">
+            <tr>
+                <th class="text-start sortable" style="width:17%;" data-col="Title">Title <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" style="width:17%;" data-col="UploadedDate">Uploaded Date <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" style="width:47%;" data-col="Description">Description <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" style="width:12%;" data-col="CreatedBy">Created By <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap" style="width:7%;">Action</th>
+            </tr>
+        </thead>
+        <tbody id="documentsTableBody">
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination-container bg-white border rounded shadow-sm py-3 mt-3">
+    <div class="d-flex justify-content-between align-items-center px-3">
+        <div class="pagination-info text-muted small">
+            Showing <span id="startRecord" class="fw-bold">0</span> to <span id="endRecord" class="fw-bold">0</span> of <span id="totalRecords" class="fw-bold">0</span> entries
+        </div>
+        <nav aria-label="Document pagination">
+            <ul class="pagination pagination-sm mb-0 flex-wrap" id="paginationList">
+                <li class="page-item" id="firstPageItem">
+                    <a class="page-link" href="#" id="firstPage" title="First Page">First</a>
+                </li>
+                <li class="page-item" id="prevPageItem">
+                    <a class="page-link" href="#" id="prevPage" title="Previous Page">Previous</a>
+                </li>
+                <div id="dynamicPaginationLinks" class="d-flex"></div>
+                <li class="page-item" id="nextPageItem">
+                    <a class="page-link" href="#" id="nextPage" title="Next Page">Next</a>
+                </li>
+                <li class="page-item" id="lastPageItem">
+                    <a class="page-link" href="#" id="lastPage" title="Last Page">Last</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            let currentPage = 1;
+            let rowsPerPage = 10;
+            let searchTerm = '';
+            let sortColumn = '';
+            let sortDirection = 'asc';
+            let searchTimeout = null;
+
+            function loadDocuments() {
+                $.ajax({
+                    url: '@Url.Action("AllDocuments", "Document")',
+                    type: 'GET',
+                    data: {
+                        page: currentPage,
+                        pageSize: rowsPerPage,
+                        searchTerm: searchTerm,
+                        sortColumn: sortColumn,
+                        sortDirection: sortDirection
+                    },
+                    success: function (response) {
+                        updateTable(response);
+                    },
+                    error: function () {
+                        alert('Error loading documents');
+                    }
+                });
+            }
+
+            function updateTable(response) {
+                const $tbody = $('#documentsTableBody');
+                $tbody.empty();
+
+                if (response.documents.length === 0) {
+                    $tbody.append('<tr><td colspan="5" class="text-center text-muted">No documents found.</td></tr>');
+                } else {
+                    response.documents.forEach(function (doc) {
+                        const uploadedDate = new Date(doc.uploadedDate);
+                        const formattedDate = formatDate(uploadedDate);
+
+                        const row = `
+                            <tr>
+                                <td class="text-start" style="width:17%;">${doc.title}</td>
+                                <td class="text-start text-nowrap" style="width:17%;">${formattedDate}</td>
+                                <td class="text-start" style="width:47%;">${doc.description || ''}</td>
+                                <td class="text-start text-nowrap" style="width:12%;">${doc.createdBy}</td>
+                                <td class="text-start text-nowrap" style="width:7%;">
+                                    <a href="/Document/ShowDocumentDetails?id=${doc.id}" class="btn btn-info btn-sm">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                        $tbody.append(row);
+                    });
+                }
+
+                updatePaginationInfo(response);
+            }
+
+            function formatDate(date) {
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = months[date.getMonth()];
+                const year = String(date.getFullYear()).slice(-2);
+                let hours = date.getHours();
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+                return `${day} ${month}. ${year} ${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+            }
+
+            function updatePaginationInfo(response) {
+                const startRecord = response.totalRecords === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+                const endRecord = Math.min(currentPage * rowsPerPage, response.totalRecords);
+
+                $('#startRecord').text(startRecord);
+                $('#endRecord').text(endRecord);
+                $('#totalRecords').text(response.totalRecords);
+
+                updatePaginationControls(response.totalPages);
+            }
+
+            function updatePaginationControls(totalPages) {
+                const $dynamicLinks = $('#dynamicPaginationLinks');
+                $dynamicLinks.empty();
+
+                const maxPageLinks = 5;
+                let startPage = Math.max(1, currentPage - Math.floor(maxPageLinks / 2));
+                let endPage = Math.min(totalPages, startPage + maxPageLinks - 1);
+
+                if (endPage - startPage + 1 < maxPageLinks) {
+                    startPage = Math.max(1, endPage - maxPageLinks + 1);
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    $dynamicLinks.append(
+                        `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`
+                    );
+                }
+
+                const isFirstPage = currentPage === 1;
+                const isLastPage = currentPage === totalPages || totalPages === 0;
+
+                $('#prevPageItem').toggleClass('disabled', isFirstPage);
+                $('#firstPageItem').toggleClass('disabled', isFirstPage);
+                $('#nextPageItem').toggleClass('disabled', isLastPage);
+                $('#lastPageItem').toggleClass('disabled', isLastPage);
+            }
+
+            $('#rowsPerPage').on('change', function () {
+                rowsPerPage = parseInt($(this).val()) || 10;
+                currentPage = 1;
+                loadDocuments();
+            });
+
+            $('#documentSearch').on('input', function () {
+                clearTimeout(searchTimeout);
+                searchTerm = $(this).val().trim();
+                searchTimeout = setTimeout(function () {
+                    currentPage = 1;
+                    loadDocuments();
+                }, 500);
+            });
+
+            $(document).on('click', '.sortable', function () {
+                const col = $(this).data('col');
+
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'asc';
+                }
+
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+                currentPage = 1;
+                loadDocuments();
+            });
+
+            $(document).on('click', '#firstPage', function (e) {
+                e.preventDefault();
+                if (!$('#firstPageItem').hasClass('disabled')) {
+                    currentPage = 1;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#prevPage', function (e) {
+                e.preventDefault();
+                if (!$('#prevPageItem').hasClass('disabled')) {
+                    currentPage--;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#nextPage', function (e) {
+                e.preventDefault();
+                if (!$('#nextPageItem').hasClass('disabled')) {
+                    currentPage++;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#lastPage', function (e) {
+                e.preventDefault();
+                if (!$('#lastPageItem').hasClass('disabled')) {
+                    const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage) || 1;
+                    currentPage = totalPages;
+                    loadDocuments();
+                }
+            });
+
+            $(document).on('click', '#dynamicPaginationLinks .page-link', function (e) {
+                e.preventDefault();
+                const page = parseInt($(this).data('page'));
+                if (!isNaN(page)) {
+                    currentPage = page;
+                    loadDocuments();
+                }
+            });
+
+            loadDocuments();
+        });
+    </script>
+}

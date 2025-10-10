@@ -1,0 +1,151 @@
+﻿@model List<DMS.Models.DocumentDetailsModel>
+@using DMS.Models
+@{
+    // Create dictionary to group documents by DocumentId and VersionNumber
+    Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>> grouped =
+        new Dictionary<int, Dictionary<int, List<DocumentDetailsModel>>>();
+
+    // Group documents manually
+    foreach (var doc in Model)
+    {
+        if (!grouped.ContainsKey(doc.DocumentId))
+        {
+            grouped[doc.DocumentId] = new Dictionary<int, List<DocumentDetailsModel>>();
+        }
+
+        if (!grouped[doc.DocumentId].ContainsKey(doc.VersionNumber))
+        {
+            grouped[doc.DocumentId][doc.VersionNumber] = new List<DocumentDetailsModel>();
+        }
+
+        grouped[doc.DocumentId][doc.VersionNumber].Add(doc);
+    }
+}
+
+@* Changed h5 to h6 for a slightly smaller title size, and py-3 to py-2 for less top/bottom padding *@
+<div class="d-flex flex-column align-items-start justify-content-center py-4 px-4 bg-light rounded shadow-sm" style="min-width: 700px;">
+    <h4 class="fw-bold text-primary mb-2" style="text-align: left;">
+        <i class="bi bi-file-earmark-text me-2"></i>
+        <b>Title: </b> @ViewBag.DocumentTitle
+    </h4>
+    <p class="text-muted fs-6 mb-0" style="max-width: 700px; text-align: left;">
+        <i class="bi bi-card-text me-2"></i> 
+        <b>Description:</b> @ViewBag.DocumentDescription
+    </p>
+</div>
+
+@* Changed mb-3/mt-3 to mb-2/mt-2 to reduce space above and below the button slightly *@
+<div class="d-flex justify-content-end mb-2 mt-2">
+    <form asp-action="AddNewDocumentVersion" asp-controller="Document" method="get" style="display:inline">
+        <input type="hidden" name="documentId" value="@ViewBag.DocumentId" />
+        <button type="submit" class="btn btn-success d-flex align-items-center gap-2 btn-sm">
+            @* Added btn-sm to button *@
+            <i class="bi bi-file-earmark-plus"></i>
+            <span>Add Version</span>
+        </button>
+    </form>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No File is found.</div>
+}
+else
+{
+    foreach (var docGroup in grouped)
+    {
+
+        // Get all version numbers and sort them
+        List<int> versionNumbers = new List<int>(docGroup.Value.Keys);
+        versionNumbers.Sort();
+
+        foreach (var versionNumber in versionNumbers)
+        {
+            var versionFiles = docGroup.Value[versionNumber];
+            var firstFile = versionFiles[0];
+
+            // Create unique ID for collapsible section
+            string collapseId = $"collapse_{docGroup.Key}_{versionNumber}";
+
+            @* Changed mb-3 to mb-2 for tighter spacing between version blocks *@
+            <div class="border p-2 mb-2">
+                <div class="d-flex justify-content-between align-items-center gap-3" style="cursor: pointer;"
+                     data-bs-toggle="collapse" data-bs-target="#@collapseId">
+
+                    @* Kept <small> tag for version details *@
+                    <small>
+                        <b class="me-3">Version: @versionNumber</b>
+                        <span class="me-3">|</span>
+                        <span class="me-3">Uploaded: @firstFile.CreatedOn.ToString("yyyy-MM-dd HH:mm")</span>
+                        <span class="me-3">|</span>
+                        <span class="me-3">Description: @firstFile.Description</span>
+                    </small>
+                    <span class="badge bg-primary">@versionFiles.Count file(s)</span>
+                </div>
+
+                <div class="collapse mt-2 small" id="@collapseId">
+                    <table class="table table-bordered table-striped" style="table-layout:fixed; width:100%;">
+                        <thead class="table-primary">
+                            <tr>
+                                <th class="text-start" style="width:33%;">File Name</th>
+                                <th class="text-start" style="width:40%;">Description</th>
+                                <th class="text-start" style="width:10%;">Status</th>
+                                <th class="text-start" style="width:17%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in versionFiles)
+                            {
+                                <tr>
+                                    <td class="text-start" style="word-break:break-word;">@file.OriginalFileName</td>
+                                    <td class="text-start" style="word-break:break-word;">@file.Description</td>
+                                    <td class="text-start">
+                                        @if (file.ApproveStatus == "approved")
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else if (file.ApproveStatus == "pending")
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@file.ApproveStatus</span>
+                                        }
+                                    </td>
+                                    <td class="text-start">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="ViewDocument" asp-route-documentDetailId="@file.Id" class="btn btn-info btn-sm" target="_blank" title="View Document">
+                                                @* Reduced font-size to 0.75rem for maximum smallness *@
+                                                <i class="bi bi-eye" style="font-size: 0.75rem;"></i>
+                                            </a>
+                                            <a asp-action="DownloadDocument" asp-route-documentDetailId="@file.Id" class="btn btn-success btn-sm" title="Download Document">
+                                                @* Reduced font-size to 0.75rem for maximum smallness *@
+                                                <i class="bi bi-cloud-arrow-down-fill" style="font-size: 0.75rem;"></i>
+                                            </a>
+                                            <form asp-action="UploadNewVersion" asp-controller="Document" method="get" style="display:inline">
+                                                <input type="hidden" name="documentDetailId" value="@file.Id" />
+                                                <input type="hidden" name="documentId" value="@file.DocumentId" />
+                                                <button type="submit" class="btn btn-primary btn-sm" title="Upload New Version">
+                                                    @* Reduced font-size to 0.75rem for maximum smallness *@
+                                                    <i class="bi bi-pencil-square" style="font-size: 0.75rem;"></i>
+                                                </button>
+                                            </form>
+                                            <form asp-action="DeleteDocumentDetail" asp-controller="Document" method="post" style="display:inline">
+                                                <input type="hidden" name="documentDetailId" value="@file.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete Document" onclick="return confirm('Are you sure you want to delete this file?');">
+                                                    @* Reduced font-size to 0.75rem for maximum smallness *@
+                                                    <i class="bi bi-trash3-fill" style="font-size: 0.75rem;"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+}

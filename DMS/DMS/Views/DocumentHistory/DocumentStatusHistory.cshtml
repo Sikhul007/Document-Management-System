@@ -1,0 +1,104 @@
+@model DMS.Models.PagedResultModel<(DMS.Models.DocumentStatusHistoryModel History, string Title, string OriginalFileName)>
+
+@{
+    ViewData["Title"] = "Document Status History";
+}
+
+<h1 class="text-center">Document Status History</h1>
+<p class="text-center">View a list of all document status changes.</p>
+
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center text-nowrap">Title</th>
+            <th class="text-center text-nowrap">File Name</th>
+            <th class="text-center text-nowrap">Status</th>
+            <th class="text-center text-nowrap">Created By</th>
+            <th class="text-center text-nowrap">Created On</th>
+            <th class="text-center text-nowrap">Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td class="text-center text-nowrap">@item.Title</td>
+                <td class="text-center text-nowrap">@item.OriginalFileName</td>
+                <td class="text-center text-nowrap">
+                    @if (item.History.ApproveStatus == "approved")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else if (item.History.ApproveStatus == "pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else if (item.History.ApproveStatus == "rejected")
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@item.History.ApproveStatus</span>
+                    }
+                </td>
+                <td class="text-center text-nowrap">@item.History.CreatedBy</td>
+                <td class="text-center text-nowrap">@item.History.CreatedOn.ToString("dd MMM. yy hh:mm tt")</td>
+                <td class="text-center text-nowrap">@item.History.Notes</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Document Status History Pagination" class="mt-4">
+        <ul class="pagination justify-content-center" style="gap: 0.5rem;">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link rounded-pill border-0 shadow-sm" href="@Url.Action("ShowHistory", new { page = 1, pageSize = Model.PageSize })" aria-label="First" style="background-color: #f8f9fa;">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link rounded-pill border-0 shadow-sm" href="@Url.Action("ShowHistory", new { page = Model.PageNumber - 1, pageSize = Model.PageSize })" aria-label="Previous" style="background-color: #f8f9fa;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            @{
+                int maxPagesToShow = 5;
+                int startPage = Math.Max(1, Model.PageNumber - 2);
+                int endPage = Math.Min(Model.TotalPages, startPage + maxPagesToShow - 1);
+                if (endPage - startPage < maxPagesToShow - 1)
+                {
+                    startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                }
+            }
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link rounded-pill border-0 shadow-sm @(i == Model.PageNumber ? "bg-primary text-white" : "bg-light")"
+                       href="@Url.Action("ShowHistory", new { page = i, pageSize = Model.PageSize })"
+                       style="min-width: 2.5rem;">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link rounded-pill border-0 shadow-sm" href="@Url.Action("ShowHistory", new { page = Model.PageNumber + 1, pageSize = Model.PageSize })" aria-label="Next" style="background-color: #f8f9fa;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link rounded-pill border-0 shadow-sm" href="@Url.Action("ShowHistory", new { page = Model.TotalPages, pageSize = Model.PageSize })" aria-label="Last" style="background-color: #f8f9fa;">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+        </ul>
+        <div class="text-center text-muted mt-2" style="font-size: 1rem;">
+            Page <span class="font-weight-bold">@Model.PageNumber</span> of <span class="font-weight-bold">@Model.TotalPages</span>
+        </div>
+    </nav>
+}

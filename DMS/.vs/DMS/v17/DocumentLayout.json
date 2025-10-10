@@ -1,0 +1,433 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Alomgir Bhai\\DMS\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\showdocumentdetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\showdocumentdetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\admin\\edituser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\admin\\edituser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\admin\\createuser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\admin\\createuser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\editdocumentfull.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\editdocumentfull.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\addnewdocumentversion.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\addnewdocumentversion.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\uploadnewversion.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\uploadnewversion.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\uploaddocument.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\uploaddocument.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\alldocuments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\alldocuments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\repository\\admin\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\repository\\admin\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\repository\\document\\idocumentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\repository\\document\\idocumentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\services\\document\\idocumentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\services\\document\\idocumentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\repository\\admin\\iadminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\repository\\admin\\iadminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\services\\admin\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\services\\admin\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\services\\admin\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\services\\admin\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\repository\\document\\documentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\repository\\document\\documentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\services\\document\\documentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\services\\document\\documentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\controllers\\documentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\controllers\\documentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\detailswithnotes.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\detailswithnotes.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\mydocuments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\mydocuments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\document\\pendingdocuments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\document\\pendingdocuments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|d:\\alomgir bhai\\dms\\dms\\views\\admin\\getallusers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{370F7499-F050-4510-BC49-F6CEB7768106}|DMS\\DMS.csproj|solutionrelative:dms\\views\\admin\\getallusers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ShowDocumentDetails.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\ShowDocumentDetails.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\ShowDocumentDetails.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\ShowDocumentDetails.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\ShowDocumentDetails.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-08T12:17:02.57Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\appsettings.json",
+              "RelativeDocumentMoniker": "DMS\\appsettings.json",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\appsettings.json",
+              "RelativeToolTip": "DMS\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-06T12:52:16.6Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Program.cs",
+              "RelativeDocumentMoniker": "DMS\\Program.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Program.cs",
+              "RelativeToolTip": "DMS\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T12:52:14.754Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UploadDocument.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\UploadDocument.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\UploadDocument.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\UploadDocument.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\UploadDocument.cshtml",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T11:32:25.266Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UploadNewVersion.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\UploadNewVersion.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\UploadNewVersion.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\UploadNewVersion.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\UploadNewVersion.cshtml",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAUwJUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T11:29:42.446Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AddNewDocumentVersion.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\AddNewDocumentVersion.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\AddNewDocumentVersion.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\AddNewDocumentVersion.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\AddNewDocumentVersion.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T10:31:12.863Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CreateUser.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Admin\\CreateUser.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Admin\\CreateUser.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Admin\\CreateUser.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Admin\\CreateUser.cshtml",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACgAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T10:25:12.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IDocumentRepository.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Document\\IDocumentRepository.cs",
+              "RelativeDocumentMoniker": "DMS\\Repository\\Document\\IDocumentRepository.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Document\\IDocumentRepository.cs",
+              "RelativeToolTip": "DMS\\Repository\\Document\\IDocumentRepository.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAIA0wCMAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T05:40:37.587Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EditUser.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Admin\\EditUser.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Admin\\EditUser.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Admin\\EditUser.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Admin\\EditUser.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T04:50:02.098Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EditDocumentFull.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\EditDocumentFull.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\EditDocumentFull.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\EditDocumentFull.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\EditDocumentFull.cshtml",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAUwHgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T12:11:32.915Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AdminRepository.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Admin\\AdminRepository.cs",
+              "RelativeDocumentMoniker": "DMS\\Repository\\Admin\\AdminRepository.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Admin\\AdminRepository.cs",
+              "RelativeToolTip": "DMS\\Repository\\Admin\\AdminRepository.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAkwDYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T03:57:23.078Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "DMS\\Controllers\\AdminController.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "DMS\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwCYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T03:55:58.035Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AllDocuments.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\AllDocuments.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\AllDocuments.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\AllDocuments.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\AllDocuments.cshtml",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAEwGMAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T06:17:29.818Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IDocumentService.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Document\\IDocumentService.cs",
+              "RelativeDocumentMoniker": "DMS\\Services\\Document\\IDocumentService.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Document\\IDocumentService.cs",
+              "RelativeToolTip": "DMS\\Services\\Document\\IDocumentService.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAIA0wBsAAACFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T05:47:48.194Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "UserModel.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Models\\UserModel.cs",
+              "RelativeDocumentMoniker": "DMS\\Models\\UserModel.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Models\\UserModel.cs",
+              "RelativeToolTip": "DMS\\Models\\UserModel.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwCoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T10:24:56.06Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "IAdminService.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Admin\\IAdminService.cs",
+              "RelativeDocumentMoniker": "DMS\\Services\\Admin\\IAdminService.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Admin\\IAdminService.cs",
+              "RelativeToolTip": "DMS\\Services\\Admin\\IAdminService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T03:57:50.968Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "AdminService.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Admin\\AdminService.cs",
+              "RelativeDocumentMoniker": "DMS\\Services\\Admin\\AdminService.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Admin\\AdminService.cs",
+              "RelativeToolTip": "DMS\\Services\\Admin\\AdminService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAcwBUAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T03:57:30.611Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "IAdminRepository.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Admin\\IAdminRepository.cs",
+              "RelativeDocumentMoniker": "DMS\\Repository\\Admin\\IAdminRepository.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Admin\\IAdminRepository.cs",
+              "RelativeToolTip": "DMS\\Repository\\Admin\\IAdminRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T03:58:30.2Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "DocumentController.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Controllers\\DocumentController.cs",
+              "RelativeDocumentMoniker": "DMS\\Controllers\\DocumentController.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Controllers\\DocumentController.cs",
+              "RelativeToolTip": "DMS\\Controllers\\DocumentController.cs",
+              "ViewState": "AgIAAMMBAAAAAAAAAAAEwNoBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T05:17:46.013Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "DocumentService.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Document\\DocumentService.cs",
+              "RelativeDocumentMoniker": "DMS\\Services\\Document\\DocumentService.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Services\\Document\\DocumentService.cs",
+              "RelativeToolTip": "DMS\\Services\\Document\\DocumentService.cs",
+              "ViewState": "AgIAAIYCAAAAAAAAAAAcwJICAACLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T05:31:36.659Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "DocumentRepository.cs",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Document\\DocumentRepository.cs",
+              "RelativeDocumentMoniker": "DMS\\Repository\\Document\\DocumentRepository.cs",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Repository\\Document\\DocumentRepository.cs",
+              "RelativeToolTip": "DMS\\Repository\\Document\\DocumentRepository.cs",
+              "ViewState": "AgIAAHkEAAAAAAAAAAAIwIsEAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-06T05:31:57.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "DetailsWithNotes.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\DetailsWithNotes.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\DetailsWithNotes.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\DetailsWithNotes.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\DetailsWithNotes.cshtml",
+              "ViewState": "AgIAAPcAAAAAAAAAAAAUwAcBAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T08:09:45.284Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "MyDocuments.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\MyDocuments.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\MyDocuments.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\MyDocuments.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\MyDocuments.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T05:59:45.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "PendingDocuments.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\PendingDocuments.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Document\\PendingDocuments.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Document\\PendingDocuments.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Document\\PendingDocuments.cshtml",
+              "ViewState": "AgIAAJUBAAAAAAAAAAAkwK0BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T05:32:43.53Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "GetAllUsers.cshtml",
+              "DocumentMoniker": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Admin\\GetAllUsers.cshtml",
+              "RelativeDocumentMoniker": "DMS\\Views\\Admin\\GetAllUsers.cshtml",
+              "ToolTip": "D:\\Alomgir Bhai\\DMS\\DMS\\Views\\Admin\\GetAllUsers.cshtml",
+              "RelativeToolTip": "DMS\\Views\\Admin\\GetAllUsers.cshtml",
+              "ViewState": "AgIAAMEAAAAAAAAAAAAUwBcBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-06T03:59:07.754Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

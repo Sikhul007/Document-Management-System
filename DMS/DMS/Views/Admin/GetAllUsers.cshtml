@@ -1,0 +1,296 @@
+﻿@model List<DMS.Models.UserModel>
+@{
+    ViewBag.Title = "User List";
+}
+
+<h4 class="text-start fw-semibold text-primary mb-3">
+    <i class="bi bi-people me-2"></i> @ViewBag.Title
+</h4>
+
+<div class="d-flex justify-content-between align-items-center mb-2 small">
+    <div class="d-flex align-items-center">
+        <span class="me-1">Show</span>
+        <select id="rowsPerPage" class="form-select form-select-sm" style="width:auto;">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+        <span class="ms-1">entries</span>
+    </div>
+    <div style="position: relative; width: 220px;">
+        <input type="text"
+               id="userSearch"
+               class="form-control form-control-sm ps-5"
+               placeholder="Search..."
+               autocomplete="off"
+               style="border-radius: 20px;">
+        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #888; font-size:0.9rem;">
+            <i class="bi bi-search"></i>
+        </span>
+    </div>
+</div>
+
+<div class="table-responsive" style="overflow-x:auto;">
+    <table id="userTable" class="table table-sm table-striped table-hover align-middle text-center shadow-sm">
+        <thead class="table-primary small">
+            <tr>
+                <th class="text-start text-nowrap sortable" data-col="Name">Name <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="UserName">Username <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="Email">Email <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="Roles">Role <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap sortable" data-col="IsActive">IsActive <span class="sort-indicator"></span></th>
+                <th class="text-start text-nowrap">Action</th>
+            </tr>
+        </thead>
+        <tbody class="small" id="userTableBody">
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td class="text-start">@user.Name</td>
+                    <td class="text-start">@user.UserName</td>
+                    <td class="text-start">@user.Email</td>
+                    <td class="text-start">@user.Roles</td>
+                    <td class="text-start">
+                        <span class="badge @(user.IsActive ? "bg-success" : "bg-danger")">
+                            @(user.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </td>
+                    <td class="text-start">
+                        <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-info btn-sm me-1" title="Edit">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <button type="button" class="btn btn-danger btn-sm delete-user"
+                                data-id="@user.Id" title="Delete">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<div class="pagination-container bg-white border rounded shadow-sm py-2 px-3 mt-2 small">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="pagination-info">
+            Showing <span id="startRecord">0</span> to <span id="endRecord">0</span> of <span id="totalRecords">0</span> entries
+        </div>
+        <nav aria-label="User pagination">
+            <ul class="pagination pagination-sm mb-0" id="paginationList">
+                <li class="page-item"><a class="page-link" href="#" id="firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="lastPage">Last</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end mt-2">
+    <a asp-action="CreateUser" class="btn btn-primary btn-sm">
+        <i class="bi bi-person-plus-fill me-1"></i> Create New User
+    </a>
+</div>
+
+@Html.AntiForgeryToken() <!-- Required for AJAX Delete -->
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            let currentPage = 1;
+            let rowsPerPage = 10;
+            let searchTerm = '';
+            let sortColumn = '';
+            let sortDirection = 'asc';
+            let searchTimeout = null;
+
+            function loadUsers() {
+                $.ajax({
+                    url: '@Url.Action("GetAllUsers", "Admin")',
+                    type: 'GET',
+                    data: {
+                        page: currentPage,
+                        pageSize: rowsPerPage,
+                        searchTerm: searchTerm,
+                        sortColumn: sortColumn,
+                        sortDirection: sortDirection
+                    },
+                    success: function (response) {
+                        updateTable(response);
+                    },
+                    error: function () {
+                        alert('Error loading users');
+                    }
+                });
+            }
+
+            function updateTable(response) {
+                const $tbody = $('#userTableBody');
+                $tbody.empty();
+
+                if (response.users.length === 0) {
+                    $tbody.append('<tr><td colspan="6" class="text-center">No users found</td></tr>');
+                } else {
+                    response.users.forEach(function (user) {
+                        const statusBadge = user.isActive
+                            ? '<span class="badge bg-success">Active</span>'
+                            : '<span class="badge bg-danger">Inactive</span>';
+
+                        const row = `
+                            <tr>
+                                <td class="text-start">${user.name}</td>
+                                <td class="text-start">${user.userName}</td>
+                                <td class="text-start">${user.email}</td>
+                                <td class="text-start">${user.roles}</td>
+                                <td class="text-start">${statusBadge}</td>
+                                <td class="text-start">
+                                    <a href="/Admin/EditUser/${user.id}" class="btn btn-info btn-sm me-1" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm delete-user"
+                                            data-id="${user.id}" title="Delete">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+                        $tbody.append(row);
+                    });
+                }
+
+                updatePaginationInfo(response);
+            }
+
+            function updatePaginationInfo(response) {
+                const startRecord = response.totalRecords === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+                const endRecord = Math.min(currentPage * rowsPerPage, response.totalRecords);
+
+                $('#startRecord').text(startRecord);
+                $('#endRecord').text(endRecord);
+                $('#totalRecords').text(response.totalRecords);
+
+                updatePaginationButtons(response.totalPages);
+            }
+
+            function updatePaginationButtons(totalPages) {
+                const $pagination = $('#paginationList');
+                $pagination.find('.page-number').remove();
+
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, currentPage + 2);
+
+                if (currentPage <= 2) endPage = Math.min(5, totalPages);
+                if (currentPage >= totalPages - 1) startPage = Math.max(1, totalPages - 4);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    const $pageItem = $(`<li class="page-item page-number ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`);
+                    $('#nextPage').parent().before($pageItem);
+                }
+
+                $('#firstPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#prevPage').parent().toggleClass('disabled', currentPage === 1);
+                $('#nextPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+                $('#lastPage').parent().toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+            }
+
+            // --- Delete user (AJAX)
+            $(document).on('click', '.delete-user', function () {
+                const userId = $(this).data('id');
+                if (!confirm('Are you sure you want to delete this user?')) return;
+
+                $.ajax({
+                    url: `/Admin/DeleteUser/${userId}`,
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function () {
+                        loadUsers(); // reload users after delete
+                    },
+                    error: function () {
+                        alert('Failed to delete user.');
+                    }
+                });
+            });
+
+            // Pagination, sorting, search handling
+            $('#rowsPerPage').on('change', function () {
+                rowsPerPage = parseInt($(this).val()) || 10;
+                currentPage = 1;
+                loadUsers();
+            });
+
+            $('#userSearch').on('input', function () {
+                clearTimeout(searchTimeout);
+                searchTerm = $(this).val().trim();
+                searchTimeout = setTimeout(function () {
+                    currentPage = 1;
+                    loadUsers();
+                }, 500);
+            });
+
+            $('.sortable').on('click', function () {
+                const col = $(this).data('col');
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'asc';
+                }
+
+                $('.sortable').removeClass('sorted-asc sorted-desc');
+                $(this).addClass(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                currentPage = 1;
+                loadUsers();
+            });
+
+            $(document).on('click', '#firstPage', function (e) { e.preventDefault(); if (currentPage > 1) { currentPage = 1; loadUsers(); } });
+            $(document).on('click', '#prevPage', function (e) { e.preventDefault(); if (currentPage > 1) { currentPage--; loadUsers(); } });
+            $(document).on('click', '#nextPage', function (e) { e.preventDefault(); const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage); if (currentPage < totalPages) { currentPage++; loadUsers(); } });
+            $(document).on('click', '#lastPage', function (e) { e.preventDefault(); const totalPages = Math.ceil($('#totalRecords').text() / rowsPerPage); if (currentPage < totalPages) { currentPage = totalPages; loadUsers(); } });
+            $(document).on('click', '.pagination .page-link[data-page]', function (e) { e.preventDefault(); const page = parseInt($(this).data('page')); if (page && page !== currentPage) { currentPage = page; loadUsers(); } });
+
+            // Initial load
+            loadUsers();
+        });
+    </script>
+
+    <style>
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px !important;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #007bff;
+        }
+
+        th.sortable:hover {
+            background: #e3f2fd;
+        }
+
+        th.sorted-asc .sort-indicator::after {
+            content: '▲';
+            font-size: 0.7em;
+        }
+
+        th.sorted-desc .sort-indicator::after {
+            content: '▼';
+            font-size: 0.7em;
+        }
+
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-indicator::after {
+            content: '⇅';
+            opacity: 0.5;
+        }
+    </style>
+}

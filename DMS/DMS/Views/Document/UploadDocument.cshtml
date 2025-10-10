@@ -1,0 +1,281 @@
+﻿@model DMS.Models.DocumentModel
+@{
+    ViewBag.Title = "Upload Document";
+    var tagListJson = System.Text.Json.JsonSerializer.Serialize((List<DMS.Models.TagModel>)ViewBag.Tags);
+}
+
+<div class="container-fluid py-3">
+    <h4 class="mb-3 fw-bold text-primary">📂 Upload Document</h4>
+
+    <form id="uploadForm" asp-action="UploadDocument" asp-controller="Document" method="post" enctype="multipart/form-data">
+        <div class="mb-2">
+            <label class="form-label fw-bold small">Title <span class="text-danger">*</span></label>
+            <input asp-for="Title" class="form-control" required />
+            <span asp-validation-for="Title" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-2">
+            <label class="form-label fw-bold small">Description <span class="text-danger">*</span></label>
+            <textarea asp-for="Description" rows="2" class="form-control"></textarea>
+        </div>
+
+        <hr class="my-3" />
+
+        <div id="fileFields">
+            <div class="file-group p-2 mb-2 bg-light border rounded" data-index="0">
+                <div class="mb-2">
+                    <label class="form-label fw-bold small">File <span class="text-danger">*</span></label>
+                    <input type="file" name="Files" class="form-control form-control-sm"
+                           accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required />
+                    <span class="text-danger small" data-valmsg-for="Files" data-valmsg-replace="true"></span>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label fw-bold small">File Description <span class="text-danger">*</span></label>
+                    <input type="text" name="FileDescriptions" class="form-control form-control-sm" required />
+                    <span class="text-danger small" data-valmsg-for="FileDescriptions" data-valmsg-replace="true"></span>
+                </div>
+
+                <div class="mb-2 tags-group">
+                    <label class="form-label fw-bold small">Tags <span class="text-danger">*</span></label>
+                    <select name="TagIds[0]" class="form-control tag-select form-control-sm" multiple="multiple" style="width: 100%">
+                        @foreach (var tag in (List<DMS.Models.TagModel>)ViewBag.Tags)
+                        {
+                            <option value="@tag.Id">@tag.Name</option>
+                        }
+                    </select>
+                    <div class="text-danger small validation-message" style="display: none;">At least one tag is required.</div>
+                </div>
+
+                <button type="button" class="btn btn-danger btn-sm remove-btn d-none" onclick="removeField(this)">
+                    <i class="bi bi-dash-circle"></i> Remove
+                </button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary btn-sm mb-3" onclick="addField()">
+            <i class="bi bi-plus-circle"></i> Add Another File
+        </button>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success px-4">
+                <i class="bi bi-upload"></i> Upload
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        let tagList = @Html.Raw(tagListJson);
+        let fileIndex = 1;
+
+        function escapeForSelector(val) {
+            if (val === null || val === undefined) return '';
+            val = val.toString();
+            return $.escapeSelector ? $.escapeSelector(val) : val.replace(/([ #;&,.+*~\':"!^$[\]()=>|\\/])/g,'\\$1');
+        }
+
+        function initializeTagSelect($element) {
+            tagList.forEach(function(t) {
+                if (!$element.find("option[value='" + escapeForSelector(t.Id) + "']").length) {
+                    $element.append(new Option(t.Name, t.Id, false, false));
+                }
+            });
+
+            $element.select2({
+                placeholder: "Search or type new tags",
+                allowClear: true,
+                tags: true,
+                tokenSeparators: [','],
+                minimumInputLength: 0,
+                ajax: {
+                    url: '@Url.Action("SearchTags", "Document")',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return { term: params.term };
+                    },
+                    processResults: function(data) {
+                        return { results: data.results || [] };
+                    }
+                },
+                createTag: function(params) {
+                    var term = $.trim(params.term);
+                    if (!term) return null;
+                    return { id: term, text: term, isNew: true };
+                }
+            });
+
+            $element.on('select2:select', function(e) {
+                var data = e.params.data;
+                var $select = $(this);
+
+                if (data.isNew) {
+                    $select.prop('disabled', true);
+                    var antiforgery = $('input[name="__RequestVerificationToken"]').val();
+
+                    $.ajax({
+                        url: '@Url.Action("CreateTag", "Document")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ TagName: data.text }),
+                        headers: antiforgery ? { 'RequestVerificationToken': antiforgery } : {},
+                        success: function(response) {
+                            if (response && response.success) {
+                                var newId = response.tag.id;
+                                var newText = response.tag.text;
+                                var term = data.id;
+
+                                $select.find("option[value='" + escapeForSelector(term) + "']").remove();
+                                var newOption = new Option(newText, newId, true, true);
+                                $select.append(newOption).trigger('change');
+
+                                if (!tagList.some(t => String(t.Id) === String(newId))) {
+                                    tagList.push({ Id: newId, Name: newText });
+                                }
+
+                                $('.tag-select').not($select).each(function() {
+                                    var $other = $(this);
+                                    if (!$other.find("option[value='" + escapeForSelector(newId) + "']").length) {
+                                        $other.append(new Option(newText, newId, false, false));
+                                    }
+                                });
+                            } else {
+                                var vals = $select.val() || [];
+                                vals = vals.filter(v => v !== data.id);
+                                $select.val(vals).trigger('change');
+                                alert('Failed to create tag.');
+                            }
+                        },
+                        error: function() {
+                            var vals = $select.val() || [];
+                            vals = vals.filter(v => v !== data.id);
+                            $select.val(vals).trigger('change');
+                            alert('Error creating tag. Please try again.');
+                        },
+                        complete: function() {
+                            $select.prop('disabled', false);
+                        }
+                    });
+                }
+            });
+
+            $element.on('change', function() {
+                var validationMessage = $(this).closest('.tags-group').find('.validation-message');
+                var v = $(this).val();
+                if (v && v.length > 0) {
+                    validationMessage.hide();
+                    $(this).next('.select2-container').find('.select2-selection').css('border-color', '');
+                }
+            });
+        }
+
+        function getTagOptionsHtml() {
+            return tagList.map(tag => `<option value="${tag.Id}">${tag.Name}</option>`).join('');
+        }
+
+        function addField() {
+            const container = document.getElementById('fileFields');
+            const group = document.createElement('div');
+            group.className = 'file-group p-2 mb-2 bg-light border rounded';
+            group.setAttribute('data-index', fileIndex);
+
+            group.innerHTML = `
+                <div class="mb-2">
+                    <label class="form-label fw-bold small">File <span class="text-danger">*</span></label>
+                    <input type="file" name="Files" class="form-control form-control-sm"
+                           accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required />
+                    <span class="text-danger small" data-valmsg-for="Files" data-valmsg-replace="true"></span>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label fw-bold small">File Description <span class="text-danger">*</span></label>
+                    <input type="text" name="FileDescriptions" class="form-control form-control-sm" required />
+                    <span class="text-danger small" data-valmsg-for="FileDescriptions" data-valmsg-replace="true"></span>
+                </div>
+                <div class="mb-2 tags-group">
+                    <label class="form-label fw-bold small">Tags <span class="text-danger">*</span></label>
+                    <select name="TagIds[${fileIndex}]" class="form-control tag-select form-control-sm" multiple="multiple" style="width: 100%">
+                        ${getTagOptionsHtml()}
+                    </select>
+                    <div class="text-danger small validation-message" style="display: none;">At least one tag is required.</div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm remove-btn" onclick="removeField(this)">
+                    <i class="bi bi-dash-circle"></i> Remove
+                </button>
+            `;
+            container.appendChild(group);
+            initializeTagSelect($(group).find('.tag-select'));
+            updateRemoveButtons();
+            fileIndex++;
+        }
+
+        function removeField(btn) {
+            btn.closest('.file-group').remove();
+            updateRemoveButtons();
+        }
+
+        function updateRemoveButtons() {
+            const groups = document.querySelectorAll('.file-group');
+            groups.forEach((group) => {
+                const removeBtn = group.querySelector('.remove-btn');
+                if (groups.length > 1) {
+                    removeBtn.classList.remove('d-none');
+                } else {
+                    removeBtn.classList.add('d-none');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('.tag-select').each(function() { initializeTagSelect($(this)); });
+
+            $('#uploadForm').on('submit', function (e) {
+                let isValid = true;
+
+                if (!$(this).valid()) isValid = false;
+
+                // ✅ check for required tags
+                $('.file-group').each(function() {
+                    const tagSelect = $(this).find('.tag-select');
+                    const validationMessage = $(this).find('.validation-message');
+                    const val = tagSelect.val();
+                    if (val === null || val.length === 0) {
+                        validationMessage.show();
+                        tagSelect.next('.select2-container').find('.select2-selection').css('border-color', '#dc3545');
+                        isValid = false;
+                    } else {
+                        validationMessage.hide();
+                        tagSelect.next('.select2-container').find('.select2-selection').css('border-color', '');
+                    }
+                });
+
+                // ✅ file type validation
+                $('.file-group input[type="file"]').each(function () {
+                    const fileInput = this;
+                    if (fileInput.files.length > 0) {
+                        const fileName = fileInput.files[0].name.toLowerCase();
+                        const allowed = /\.(jpg|jpeg|png|gif|webp|pdf|doc|docx|xls|xlsx|ppt|pptx)$/i;
+                        if (!allowed.test(fileName)) {
+                            alert(`"${fileName}" is not an allowed file type.`);
+                            isValid = false;
+                        }
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: $('.text-danger:visible, .validation-message:visible').first().offset().top - 120
+                    }, 300);
+                }
+            });
+        });
+    </script>
+}

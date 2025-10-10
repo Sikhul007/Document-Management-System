@@ -1,0 +1,357 @@
+﻿@{
+    var userRole = Context.Session.GetString("UserRole");
+    var userName = Context.Session.GetString("UserName");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] DMS </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DMS_Final.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        /* Define a new, smaller sidebar width */
+        :root {
+            --sidebar-width: 220px; /* Reduced from 250px */
+            --link-padding-v: 10px; /* Reduced vertical padding from 12px */
+            --link-padding-h: 15px; /* Reduced horizontal padding from 20px */
+            --font-size-sm: 0.9rem; /* Slightly smaller font size for links */
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width); /* Use the new width */
+            background: #1e293b;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 15px; /* Reduced padding */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+        }
+
+            .sidebar-header img {
+                max-width: 40px; /* Slightly smaller logo */
+                margin-right: 8px; /* Reduced margin */
+            }
+
+            .sidebar-header h5 {
+                margin: 0;
+                font-size: 1.1rem; /* Slightly smaller title */
+                font-weight: 700;
+            }
+
+        .nav-container {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 5px 0; /* Reduced vertical padding */
+        }
+
+            .nav-links a {
+                display: flex;
+                align-items: center;
+                padding-top: var(--link-padding-v);
+                padding-bottom: var(--link-padding-v);
+                padding-left: var(--link-padding-h);
+                color: #cbd5e1;
+                text-decoration: none;
+                font-size: var(--font-size-sm); /* Use smaller font size */
+                transition: all 0.2s ease-in-out;
+            }
+
+                .nav-links a:hover,
+                .nav-links a.active {
+                    background: #334155;
+                    color: #38bdf8;
+                }
+
+            .nav-links i {
+                font-size: 1.1rem; /* Slightly smaller icon */
+                margin-right: 12px; /* Reduced margin */
+                width: 20px; /* Slightly smaller icon space */
+                text-align: center;
+            }
+
+        .submenu-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out, padding 0.3s ease;
+            padding-left: 0;
+        }
+
+            .submenu-container.show {
+                max-height: 500px;
+                padding-left: 10px;
+            }
+
+            .submenu-container ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .submenu-container li a {
+                padding: 8px 30px; /* Adjusted padding for nested links */
+                font-size: 0.85rem; /* Even smaller font for sub-links */
+            }
+
+        .bi-caret-left-fill {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+            .bi-caret-left-fill.rotate {
+                transform: rotate(-90deg);
+            }
+
+        .bottom-links {
+            border-top: 1px solid #334155;
+            padding: 5px 0; /* Reduced padding */
+            list-style: none;
+            margin: 0;
+        }
+
+            .bottom-links a {
+                display: flex;
+                align-items: center;
+                padding: var(--link-padding-v) var(--link-padding-h);
+                color: #cbd5e1;
+                text-decoration: none;
+                font-size: var(--font-size-sm);
+            }
+
+                .bottom-links a:hover {
+                    background: #334155;
+                }
+
+                .bottom-links a i {
+                    font-size: 1.1rem;
+                    margin-right: 12px;
+                    width: 20px;
+                    text-align: center;
+                }
+
+        .logout-link {
+            color: #f87171 !important;
+        }
+
+            .logout-link:hover {
+                background: #b91c1c;
+                color: #fff !important;
+            }
+
+        .sidebar-footer {
+            padding: 10px; /* Reduced padding */
+            border-top: 1px solid #334155;
+            text-align: center;
+            font-size: 0.75rem; /* Smaller footer text */
+            color: #94a3b8;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width); /* Adjusted margin for the new width */
+            width: calc(100% - var(--sidebar-width));
+            padding: 20px;
+            overflow-y: auto;
+        }
+        /* Sidebar scrollbar styling remains the same */
+        .sidebar .nav-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar .nav-container::-webkit-scrollbar-track {
+            background-color: #1e293b;
+        }
+
+        .sidebar .nav-container::-webkit-scrollbar-thumb {
+            background-color: #334155;
+            border-radius: 4px;
+        }
+
+            .sidebar .nav-container::-webkit-scrollbar-thumb:hover {
+                background-color: #475569;
+            }
+    </style>
+
+</head>
+<body>
+    @if (userRole == "Admin")
+    {
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="~/images/shampan-logo.png" alt="Logo">
+                <h5 class="sidebar-title">DMS Admin</h5>
+            </div>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li>
+                        <a asp-controller="User" asp-action="AdminDashboard" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "AdminDashboard" ? "active" : "")">
+                            <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="toggleSubmenu(event, 'usersSubmenu')">
+                            <i class="bi bi-people"></i><span>Users</span>
+                            <i class="bi bi-caret-left-fill" id="usersChevron"></i>
+                        </a>
+                    </li>
+                    <li class="submenu-container" id="usersSubmenu">
+                        <ul>
+                            <li>
+                                <a asp-controller="Admin" asp-action="CreateUser">
+                                    <i class="bi bi-person-plus-fill"></i><span>Create User</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Admin" asp-action="GetAllUsers">
+                                    <i class="bi bi-people-fill"></i><span>Show All Users</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" onclick="toggleSubmenu(event, 'docsSubmenu')">
+                            <i class="bi bi-folder"></i><span>Documents</span>
+                            <i class="bi bi-caret-left-fill" id="docsChevron"></i>
+                        </a>
+                    </li>
+                    <li class="submenu-container" id="docsSubmenu">
+                        <ul>
+                            <li>
+                                <a asp-controller="Document" asp-action="PendingDocuments">
+                                    <i class="bi bi-clock-history"></i><span>Pending Review</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Document" asp-action="MyDocuments">
+                                    <i class="bi bi-file-earmark-medical"></i><span>My Documents</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Document" asp-action="AllDocuments">
+                                    <i class="bi bi-archive"></i><span>All Documents</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <ul class="bottom-links">
+                <li>
+                    <a asp-controller="User" asp-action="ChangePassword">
+                        <i class="bi bi-key"></i><span>Change Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="User" asp-action="Logout" class="logout-link">
+                        <i class="bi bi-box-arrow-right"></i><span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                © Symphony Softtech Ltd.
+            </div>
+        </div>
+    }
+    else if (userRole == "Developer")
+    {
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="~/images/shampan-logo.png" alt="Logo">
+                <h5 class="sidebar-title">DMS Developer</h5>
+            </div>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li>
+                        <a asp-controller="User" asp-action="DeveloperDashboard" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "DeveloperDashboard" ? "active" : "")">
+                            <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="toggleSubmenu(event, 'docsSubmenu')">
+                            <i class="bi bi-folder"></i><span>Documents</span>
+                            <i class="bi bi-caret-left-fill" id="docsChevron"></i>
+                        </a>
+                    </li>
+                    <li class="submenu-container" id="docsSubmenu">
+                        <ul>
+                            <li>
+                                <a asp-controller="Document" asp-action="PendingDocuments">
+                                    <i class="bi bi-clock-history"></i><span>Pending Documents</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Document" asp-action="MyDocuments">
+                                    <i class="bi bi-file-earmark-medical"></i><span>My Documents</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Document" asp-action="DetailsWithNotes">
+                                    <i class="bi bi-file-earmark-medical"></i><span>Rejected Documents</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <ul class="bottom-links">
+                <li>
+                    <a asp-controller="User" asp-action="ChangePassword">
+                        <i class="bi bi-key"></i><span>Change Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="User" asp-action="Logout" class="logout-link">
+                        <i class="bi bi-box-arrow-right"></i><span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                © Symphony Softtech Ltd.
+            </div>
+        </div>
+    }
+    <div class="main-content">
+        @RenderBody()
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        function toggleSubmenu(event, submenuId) {
+            event.preventDefault();
+            const submenu = document.getElementById(submenuId);
+            const chevron = event.currentTarget.querySelector(".bi-caret-left-fill");
+            submenu.classList.toggle("show");
+            chevron.classList.toggle("rotate");
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

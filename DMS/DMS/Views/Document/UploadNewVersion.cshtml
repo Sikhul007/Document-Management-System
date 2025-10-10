@@ -1,0 +1,149 @@
+﻿@using DMS.Models
+@{
+    var allTags = ViewBag.AllTags as List<TagModel>;
+    var selectedTags = ViewBag.SelectedTags as List<DocumentTagModel>;
+    var selectedTagNames = selectedTags?.Select(t => t.TagName).ToHashSet() ?? new HashSet<string>();
+    var tagOptionsHtml = string.Join("", allTags.Select(t =>
+        selectedTagNames.Contains(t.Name)
+            ? $"<option value=\"{t.Id}\" selected>{t.Name}</option>"
+            : $"<option value=\"{t.Id}\">{t.Name}</option>"
+    ));
+    var tagOptionsHtmlNoSelect = string.Join("", allTags.Select(t =>
+        $"<option value=\"{t.Id}\">{t.Name}</option>"
+    ));
+}
+
+<h4 class="fw-bold text-primary mb-3">📂 Upload New Version</h4>
+
+<form asp-action="UploadNewVersion" asp-controller="Document" method="post" enctype="multipart/form-data" onsubmit="return validateFiles()">
+    <input type="hidden" name="documentDetailId" value="@ViewBag.DocumentDetailId" />
+    <input type="hidden" name="documentId" value="@ViewBag.DocumentId" />
+
+    <div id="fileFields">
+        <!-- First file group (cannot be removed) -->
+        <div class="file-group mb-2 p-2 bg-light border rounded small">
+            <div class="mb-1">
+                <label class="form-label fw-bold small">File <span class="text-danger">*</span></label>
+                <input type="file" name="Files" class="form-control form-control-sm file-input"
+                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required />
+            </div>
+
+            <div class="mb-1">
+                <label class="form-label fw-bold small">Description</label>
+                <input type="text" name="FileDescriptions" class="form-control form-control-sm" value="@ViewBag.FileDescription" />
+            </div>
+
+            <div class="mb-1">
+                <label class="form-label fw-bold small">Tags</label>
+                <select name="TagIds[0]" class="form-control form-control-sm tag-select" multiple="multiple" style="width: 100%;">
+                    @Html.Raw(tagOptionsHtml)
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addField()">
+                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Add More Files
+            </button>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-success btn-sm px-3">
+                <i class="bi bi-upload me-1" aria-hidden="true"></i> Upload
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script>
+        let fileIndex = 1;
+        const allowedExtensions = [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"];
+
+        // Add new file field dynamically
+        function addField() {
+            const container = document.getElementById('fileFields');
+            const group = document.createElement('div');
+            group.className = 'file-group mb-2 p-2 bg-light border rounded small';
+
+            group.innerHTML = `
+                <div class="mb-1">
+                    <label class="form-label fw-bold small">File <span class="text-danger">*</span></label>
+                    <input type="file" name="Files" class="form-control form-control-sm file-input"
+                           accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required />
+                </div>
+                <div class="mb-1">
+                    <label class="form-label fw-bold small">Description</label>
+                    <input type="text" name="FileDescriptions" class="form-control form-control-sm" />
+                </div>
+                <div class="mb-1">
+                    <label class="form-label fw-bold small">Tags</label>
+                    <select name="TagIds[${fileIndex}]" class="form-control form-control-sm tag-select" multiple="multiple" style="width: 100%;">
+                        @Html.Raw(tagOptionsHtmlNoSelect)
+                    </select>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm mt-1 remove-btn" onclick="removeField(this)">
+                    <i class="bi bi-dash-circle"></i> Remove
+                </button>
+            `;
+
+            container.appendChild(group);
+            initializeSelect2($(group).find('.tag-select'));
+            updateRemoveButtons();
+            fileIndex++;
+        }
+
+        // Remove a file input group
+        function removeField(btn) {
+            btn.parentElement.remove();
+            updateRemoveButtons();
+        }
+
+        // Show "Remove" only on extra fields
+        function updateRemoveButtons() {
+            const groups = document.querySelectorAll('.file-group');
+            groups.forEach((group, index) => {
+                const btn = group.querySelector('.remove-btn');
+                if (btn) {
+                    btn.style.display = index === 0 ? 'none' : 'inline-block';
+                }
+            });
+        }
+
+        // Initialize tag select dropdown
+        function initializeSelect2($element) {
+            $element.select2({
+                placeholder: "Select tags",
+                allowClear: true
+            });
+        }
+
+        // Validate file extensions before submitting
+        function validateFiles() {
+            const files = document.querySelectorAll('.file-input');
+            for (let fileInput of files) {
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name.toLowerCase();
+                    const valid = allowedExtensions.some(ext => fileName.endsWith(ext));
+                    if (!valid) {
+                        alert("❌ Invalid file type: " + fileName + "\n\nAllowed types are: " + allowedExtensions.join(", "));
+                        fileInput.value = ""; // clear invalid file
+                        return false; // block form submit
+                    }
+                }
+            }
+            return true;
+        }
+
+        $(document).ready(function () {
+            initializeSelect2($('.tag-select'));
+            updateRemoveButtons();
+        });
+    </script>
+}
